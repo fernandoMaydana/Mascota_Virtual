@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mi Mascota Virtual 🍮✨ | Regalo Especial</title>
+  
+  <!-- SEO & Meta -->
+  <meta name="description" content="Una mascota virtual interactiva con estilo Claymorphism hecha con cariño.">
+  <meta name="theme-color" content="#FFB7C5">
+  
+  <!-- Google Fonts: Fredoka & Quicksand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/claymorphism.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="clay-bg">
+
+  <!-- Container Principal -->
+  <div id="app" class="app-container">
+
+    <!-- ===================================================
+         PANTALLA 1: La Carta / Regalo
+         =================================================== -->
+    <section id="screen-gift" class="screen active">
+      <div class="clay-card card-gift">
+        <div class="gift-header">
+          <span class="badge-tag">💌 Mensaje Especial</span>
+          <h1 class="clay-title">¡Un regalo para ti!</h1>
+        </div>
+        
+        <div class="letter-content">
+          <p class="letter-text">
+            ¡Hola! Alguien muy especial te preparó esta sorpresa interactiva. 
+            Durante los próximos 5 días tendrás un amiguito virtual para cuidar, mimar y compartir sonrisas.
+          </p>
+        </div>
+
+        <!-- Caja de Regalo Interactiva 3D Clay -->
+        <div class="gift-box-wrapper" id="gift-box-trigger">
+          <div class="gift-box clay-gift">
+            <div class="gift-lid">
+              <div class="gift-bow">🎀</div>
+            </div>
+            <div class="gift-body">
+              <div class="gift-sparkles">✨🌸✨</div>
+            </div>
+          </div>
+          <p class="tap-hint">¡Toca el regalo para abrirlo!</p>
+        </div>
+
+        <button id="btn-open-gift" class="clay-btn btn-primary pulse">
+          Abrir el regalo 🎁
+        </button>
+      </div>
+    </section>
+
+
+    <!-- ===================================================
+         PANTALLA 2: La Revelación & Nombre (con GIF de Purin)
+         =================================================== -->
+    <section id="screen-reveal" class="screen hidden">
+      <div class="clay-card card-reveal">
+        
+        <!-- Cabecera y Avatar de Revelación (Paso 1) -->
+        <div id="reveal-top-header">
+          <div class="reveal-header">
+            <span class="badge-tag">🍮 ¡Tu nuevo compañero!</span>
+            <h2 class="clay-title">¡Conoce a tu Mascota!</h2>
+          </div>
+
+          <!-- Avatar de Pompompurin / GIF Saludando -->
+          <div class="pet-reveal-container">
+            <div class="speech-bubble clay-bubble">
+              ¡Hola! Tengo muchas ganas de ser tu mejor amigo 💛
+            </div>
+            <div class="pet-avatar-large clay-pet-shadow" id="pet-reveal-avatar">
+              <img src="assets/purin_saludando.gif" id="purin-gif-img" alt="Pompompurin Saludando" class="pet-gif-render" onerror="this.style.display='none'; document.getElementById('purin-svg-fallback').style.display='flex';">
+              <div id="purin-svg-fallback" class="pompompurin-avatar greeting-state" style="display:none;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario de Nombre (Paso 1) -->
+        <div id="name-step-1" class="name-form clay-inset-box">
+          <label for="pet-name-input" class="input-label">
+            ✨ Ponle un nombre especial a tu compañero:
+          </label>
+          <input type="text" id="pet-name-input" class="clay-input" placeholder="Ej: Pompom, Pudín, Mochito..." maxlength="15" autocomplete="off">
+          <button id="btn-save-name" class="clay-btn btn-accent margin-top-sm">
+            Guardar nombre ✨
+          </button>
+        </div>
+
+        <!-- PASO 2: ¿Por qué ese nombre? (Solo título centrado, textarea y botón Guardar) -->
+        <div id="name-step-2" class="name-reason-clean hidden">
+          <h2 class="clay-title center big-reason-title">¿Por qué ese nombre?</h2>
+          
+          <div class="clay-inset-box margin-top">
+            <textarea id="pet-name-reason-input" class="clay-textarea" placeholder="Escribe el por qué o tu chiste interno aquí... 🤭" rows="4"></textarea>
+          </div>
+
+          <button id="btn-save-reason" class="clay-btn btn-primary margin-top full-width">
+            Guardar
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ===================================================
+         PANTALLA 3: Tutorial Breve
+         =================================================== -->
+    <section id="screen-tutorial" class="screen hidden">
+      <div class="clay-card card-tutorial">
+        <h2 class="clay-title center">¿Cómo jugar? 💖</h2>
+        <p class="tutorial-subtitle">Descubre la dinámica de los 5 días:</p>
+
+        <!-- 3 Tarjetas Flotantes Clay -->
+        <div class="tutorial-cards-grid">
+          <div class="clay-card tutorial-item float-1">
+            <div class="tutorial-icon">🏡</div>
+            <div class="tutorial-text">
+              <h3>1. Cuida cada día</h3>
+              <p>Cuida a <span class="pet-name-placeholder">tu mascota</span> todos los días para mantener sus barras al 100%.</p>
+            </div>
+          </div>
+
+          <div class="clay-card tutorial-item float-2">
+            <div class="tutorial-icon">🍮</div>
+            <div class="tutorial-text">
+              <h3>2. Cumple tus tareas</h3>
+              <p>Completa tus mini misiones diarias para regalarle mimos y pudines.</p>
+            </div>
+          </div>
+
+          <div class="clay-card tutorial-item float-3">
+            <div class="tutorial-icon">🎁</div>
+            <div class="tutorial-text">
+              <h3>3. Sorpresa Día 5</h3>
+              <p>¡Al llegar al Día 5 se desbloqueará una gran sorpresa final super especial!</p>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-start-game" class="clay-btn btn-primary large">
+          ¡Entendido, a jugar! 🚀
+        </button>
+      </div>
+    </section>
+
+
+    <!-- ===================================================
+         PANTALLA 4: Dashboard Principal (REDISEÑADO SEGÚN WIREFRAME)
+         =================================================== -->
+    <section id="screen-dashboard" class="screen hidden">
+      <div class="clay-card dashboard-main-card">
+        
+        <!-- 1. HEADER SUPERIOR (Nombre dueña | Progreso) -->
+        <header class="dashboard-header-wireframe">
+          <div class="header-pill clay-pill owner-pill">
+            <span class="owner-icon">🌸</span>
+            <span id="dash-owner-name" class="owner-name-text">Tu Regalo</span>
+          </div>
+
+          <div class="header-pill clay-pill progress-pill">
+            <span id="dash-day-badge" class="progress-text">Día 1 / 5 🌸</span>
+            <button id="btn-open-settings" class="clay-btn-icon" title="Ajustes">⚙️</button>
+          </div>
+        </header>
+
+        <!-- 2. BADGE CENTRADO (Nombre de la mascota) -->
+        <div class="pet-name-banner-container">
+          <div class="clay-pill pet-name-banner">
+            <span class="pet-banner-icon">🍮</span>
+            <span id="dash-pet-name" class="pet-banner-text">Pompom</span>
+          </div>
+          
+          <button id="btn-toggle-day" class="clay-btn-sm btn-ghost dev-day-toggle" title="Cambiar Día (Dev / Prueba)">
+            📅 <span id="day-toggle-label">Día 2</span>
+          </button>
+        </div>
+
+        <!-- 3. ÁREA CENTRADA DE LA MASCOTA -->
+        <div class="pet-stage-container wireframe-stage">
+          <!-- Bocadillo de Diálogo Dinámico -->
+          <div id="pet-dialog" class="speech-bubble clay-bubble pet-bubble pulse-subtle">
+            ¡Hazme clic o mantenme presionado para mimarme! 💕
+          </div>
+
+          <!-- Mascota Interactiva Grande Centrada -->
+          <div id="pet-interactive-avatar" class="pet-interactive clay-pet-shadow wireframe-pet-circle">
+            <img src="assets/purin_saludando.gif" id="dash-purin-gif" alt="Pompompurin Interactive" class="pet-gif-render" onerror="this.style.display='none'; document.getElementById('pet-sprite').style.display='flex';">
+            <div id="pet-sprite" class="pompompurin-avatar happy-idle" style="display:none;"></div>
+            
+            <!-- Anillo de progreso al presionar 3 seg -->
+            <div id="hold-progress-overlay" class="hold-progress-overlay hidden">
+              <svg class="progress-ring" width="200" height="200">
+                <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.4)" stroke-width="10" fill="transparent" r="85" cx="100" cy="100"/>
+                <circle id="hold-circle" class="progress-ring__circle" stroke="#FF69B4" stroke-width="10" stroke-dasharray="534" stroke-dashoffset="534" stroke-linecap="round" fill="transparent" r="85" cx="100" cy="100"/>
+              </svg>
+              <span class="hold-text">¡MIMANDO! 💕</span>
+            </div>
+          </div>
+
+          <!-- Partículas flotantes -->
+          <div id="particles-container"></div>
+        </div>
+
+        <!-- 4. TRES BARRAS DE ESTADO EN FILA HORIZONTAL (Mimos | Comida | Energía) -->
+        <div class="stats-triple-row">
+          
+          <div class="mini-stat-clay">
+            <div class="mini-stat-header">
+              <span>💖 Mimos</span>
+              <span id="val-mimos" class="stat-val">80%</span>
+            </div>
+            <div class="clay-progress-track mini-track">
+              <div id="bar-mimos" class="clay-progress-fill fill-mimos" style="width: 80%;"></div>
+            </div>
+          </div>
+
+          <div class="mini-stat-clay">
+            <div class="mini-stat-header">
+              <span>🍮 Comida</span>
+              <span id="val-comida" class="stat-val">70%</span>
+            </div>
+            <div class="clay-progress-track mini-track">
+              <div id="bar-comida" class="clay-progress-fill fill-comida" style="width: 70%;"></div>
+            </div>
+          </div>
+
+          <div class="mini-stat-clay">
+            <div class="mini-stat-header">
+              <span>⚡ Energía</span>
+              <span id="val-energia" class="stat-val">90%</span>
+            </div>
+            <div class="clay-progress-track mini-track">
+              <div id="bar-energia" class="clay-progress-fill fill-energia" style="width: 90%;"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 5. BOTÓN PRINCIPAL INFERIOR: TAREAS DEL DÍA -->
+        <div class="bottom-action-container">
+          <button id="btn-open-tasks-modal" class="clay-btn btn-primary large-tasks-btn pulse">
+            📋 Tareas del día
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+
+  <!-- ===================================================
+       MODALES Claymorphic
+       =================================================== -->
+
+  <!-- MODAL PRINCIPAL: LISTA DE TAREAS DEL DÍA (DÍA 1 / DÍA 2) -->
+  <div id="modal-tasks-list" class="modal-overlay hidden">
+    <div class="clay-card modal-content tasks-modal-card">
+      <button class="modal-close-btn" data-close="modal-tasks-list">&times;</button>
+      
+      <div class="tasks-modal-header text-center">
+        <span class="badge-tag">📋 Misiones Diarias</span>
+        <h3 class="clay-title" id="tasks-modal-title">Tareas del Día 1</h3>
+      </div>
+
+      <!-- DÍA 1 CONTENEDOR EN MODAL -->
+      <div id="day-1-tasks" class="day-tasks-container margin-top">
+        <div class="tasks-header">
+          <span id="day1-progress-badge" class="task-progress-tag">0/3 completadas</span>
+        </div>
+
+        <div class="tasks-grid">
+          <!-- Tarea 1: Primer Mimo (3 seg) -->
+          <div id="task-card-mimo" class="clay-card task-card">
+            <div class="task-icon">💖</div>
+            <div class="task-details">
+              <h4>1. Darle su primer mimo</h4>
+              <p>Mantén presionada a la mascota por 3 segundos seguidos.</p>
+              <div class="task-action-wrapper">
+                <span id="mimo-status-text" class="status-hint">Mantén presionado sobre la mascota</span>
+              </div>
+            </div>
+            <div class="task-check" id="check-mimo">⬜</div>
+          </div>
+
+          <!-- Tarea 2: Estado de Ánimo -->
+          <div id="task-card-mood" class="clay-card task-card clickable">
+            <div class="task-icon">🌈</div>
+            <div class="task-details">
+              <h4>2. Registrar tu estado de ánimo</h4>
+              <p>¿Cómo te sientes hoy? Cuéntale a <span class="pet-name-placeholder">tu mascota</span>.</p>
+              <button id="btn-open-mood-modal" class="clay-btn-sm btn-accent margin-top-xs">
+                Registrar Ánimo 📝
+              </button>
+            </div>
+            <div class="task-check" id="check-mood">⬜</div>
+          </div>
+
+          <!-- Tarea 3: Notificaciones -->
+          <div id="task-card-notif" class="clay-card task-card clickable">
+            <div class="task-icon">🔔</div>
+            <div class="task-details">
+              <h4>3. Activar recordatorios</h4>
+              <p>Para que no te extrañe en tus momentos ocupados.</p>
+              <button id="btn-activate-notif" class="clay-btn-sm btn-primary margin-top-xs">
+                Activar Notificaciones 🔔
+              </button>
+            </div>
+            <div class="task-check" id="check-notif">⬜</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÍA 2 CONTENEDOR EN MODAL -->
+      <div id="day-2-tasks" class="day-tasks-container hidden margin-top">
+        <div class="tasks-header">
+          <span id="day2-progress-badge" class="task-progress-tag">0/3 completadas</span>
+        </div>
+
+        <div class="tasks-grid">
+          <!-- Tarea 1 Día 2: Alimentar Pudín -->
+          <div id="task-card-feed" class="clay-card task-card clickable">
+            <div class="task-icon">🍮</div>
+            <div class="task-details">
+              <h4>1. Darle su pudín favorito</h4>
+              <p>¡A Pompompurin le encanta comer pudines caseros!</p>
+              <button id="btn-open-feed-modal" class="clay-btn-sm btn-primary margin-top-xs">
+                Dar Pudín 🍮
+              </button>
+            </div>
+            <div class="task-check" id="check-feed">⬜</div>
+          </div>
+
+          <!-- Tarea 2 Día 2: Mensaje / Cápsula -->
+          <div id="task-card-memory" class="clay-card task-card clickable">
+            <div class="task-icon">💌</div>
+            <div class="task-details">
+              <h4>2. Abrir la Nota Diaria del Día 2</h4>
+              <p>Un mensaje secreto guardado especialmente para hoy.</p>
+              <button id="btn-open-memory-modal" class="clay-btn-sm btn-accent margin-top-xs">
+                Leer Nota Secreta 💌
+              </button>
+            </div>
+            <div class="task-check" id="check-memory">⬜</div>
+          </div>
+
+          <!-- Tarea 3 Día 2: Mini-juego -->
+          <div id="task-card-minigame" class="clay-card task-card clickable">
+            <div class="task-icon">🎮</div>
+            <div class="task-details">
+              <h4>3. Juego: Atrapa Pudines</h4>
+              <p>Consigue al menos 5 pudines cayendo del cielo.</p>
+              <button id="btn-open-minigame-modal" class="clay-btn-sm btn-primary margin-top-xs">
+                Jugar Mini-juego 🕹️
+              </button>
+            </div>
+            <div class="task-check" id="check-minigame">⬜</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="clay-btn btn-ghost margin-top full-width" data-close="modal-tasks-list">
+        Cerrar Lista ✖️
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Modal Estado de Ánimo (Día 1 Tarea 2) -->
+  <div id="modal-mood" class="modal-overlay hidden">
+    <div class="clay-card modal-content">
+      <button class="modal-close-btn" data-close="modal-mood">&times;</button>
+      <h3 class="clay-title">🌈 ¿Cómo te sientes hoy?</h3>
+      <p class="modal-subtitle">Selecciona tu emoción del día para <span class="pet-name-placeholder">tu mascota</span>:</p>
+
+      <div class="mood-selector-grid">
+        <button class="mood-btn" data-mood="Super Feliz 🌟">🥰 Super Feliz</button>
+        <button class="mood-btn" data-mood="Tranquila 🌸">🌸 Tranquila</button>
+        <button class="mood-btn" data-mood="Un poco cansada 😴">😴 Cansada</button>
+        <button class="mood-btn" data-mood="Necesito un abrazo 🫂">🫂 Sensible</button>
+      </div>
+
+      <div class="clay-inset-box margin-top">
+        <textarea id="mood-note-input" class="clay-textarea" placeholder="Escribe algo opcional sobre tu día... 💕" rows="3"></textarea>
+      </div>
+
+      <button id="btn-save-mood" class="clay-btn btn-primary full-width margin-top">
+        Guardar mi Ánimo ✨
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Modal Alimentar Pudín (Día 2 Tarea 1) -->
+  <div id="modal-feed" class="modal-overlay hidden">
+    <div class="clay-card modal-content text-center">
+      <button class="modal-close-btn" data-close="modal-feed">&times;</button>
+      <h3 class="clay-title">🍮 Hora del Pudín</h3>
+      <p class="modal-subtitle">Toca el pudín para dárselo a <span class="pet-name-placeholder">tu mascota</span>!</p>
+
+      <div class="pudding-feed-area">
+        <div id="feed-pet-sprite" class="pet-avatar-medium">
+          <img src="assets/purin_saludando.gif" alt="Feed Purin" class="pet-gif-render" onerror="this.style.display='none'; document.getElementById('feed-svg-fallback').style.display='flex';">
+          <div id="feed-svg-fallback" class="pompompurin-avatar happy-idle" style="display:none;"></div>
+        </div>
+        
+        <div class="pudding-counter-badge clay-pill">
+          Pudines comidos: <span id="feed-count">0</span> / 3 🍮
+        </div>
+
+        <div class="pudding-items-grid">
+          <button class="clay-btn pudding-tap-btn" id="btn-pudding-tap">
+            🍮 ¡Dar Pudín Delicioso!
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal Nota Secreta Día 2 (Día 2 Tarea 2) -->
+  <div id="modal-memory" class="modal-overlay hidden">
+    <div class="clay-card modal-content">
+      <button class="modal-close-btn" data-close="modal-memory">&times;</button>
+      <div class="memory-header text-center">
+        <span class="badge-tag">💌 Mensaje Secreto Día 2</span>
+        <h3 class="clay-title">¡Para ti en tu Día 2!</h3>
+      </div>
+      
+      <div class="letter-content clay-inset-box margin-top">
+        <p class="letter-text">
+          "¡Feliz Día 2! Espero que tu amiguito virtual te esté sacando muchas sonrisas hoy. 
+          Recuerda tomarte una pausa, tomar agüita y recordar lo increíble que eres. 
+          ¡Sigue cuidando a tu mascota!"
+        </p>
+      </div>
+
+      <button id="btn-read-memory-done" class="clay-btn btn-accent full-width margin-top">
+        ¡Guardar en mis recuerdos! 💖
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Modal Minijuego Atrapa Pudines (Día 2 Tarea 3) -->
+  <div id="modal-minigame" class="modal-overlay hidden">
+    <div class="clay-card modal-content text-center">
+      <button class="modal-close-btn" data-close="modal-minigame">&times;</button>
+      <h3 class="clay-title">🎮 Atrapa los Pudines</h3>
+      <p class="modal-subtitle">¡Mueve la canastita con el dedo o ratón para atrapar 5 pudines!</p>
+
+      <div id="minigame-canvas-container" class="minigame-container clay-inset-box">
+        <div id="game-score-badge" class="game-score">Puntos: <span id="game-score-val">0</span> / 5</div>
+        <div id="minigame-area" class="minigame-area">
+          <div id="basket-player" class="basket-player">🧺</div>
+        </div>
+        <button id="btn-start-minigame" class="clay-btn btn-primary">
+          ¡Empezar Juego! 🚀
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal Configuración / Supabase Credentials -->
+  <div id="modal-settings" class="modal-overlay hidden">
+    <div class="clay-card modal-content">
+      <button class="modal-close-btn" data-close="modal-settings">&times;</button>
+      <h3 class="clay-title">⚙️ Ajustes & Supabase</h3>
+      <p class="modal-subtitle">Conecta con tu base de datos Supabase o mantén el modo local.</p>
+
+      <div class="settings-form clay-inset-box margin-top">
+        <div class="input-group">
+          <label class="input-label">Nombre de la dueña (Amiga):</label>
+          <input type="text" id="cfg-owner-name" class="clay-input" placeholder="Ej: Valentina, María, Sofía...">
+        </div>
+        <div class="input-group margin-top-sm">
+          <label class="input-label">Supabase URL:</label>
+          <input type="text" id="cfg-supabase-url" class="clay-input" placeholder="https://xyz.supabase.co">
+        </div>
+        <div class="input-group margin-top-sm">
+          <label class="input-label">Supabase Anon Key:</label>
+          <input type="password" id="cfg-supabase-key" class="clay-input" placeholder="eyJhbGciOi...">
+        </div>
+        <div class="status-indicator margin-top-sm">
+          Estado actual: <strong id="cfg-status-text">💾 Modo Local (localStorage)</strong>
+        </div>
+      </div>
+
+      <div class="settings-buttons margin-top">
+        <button id="btn-save-settings" class="clay-btn btn-primary full-width">
+          Guardar Configuración 💾
+        </button>
+        <button id="btn-reset-data" class="clay-btn btn-ghost full-width margin-top-sm" style="color: #ff4757;">
+          🔄 Reiniciar Progreso (Reset)
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Scripts JS principales -->
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/pet.js"></script>
+  <script src="js/tasks.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

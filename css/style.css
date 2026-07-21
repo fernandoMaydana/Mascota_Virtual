@@ -1,0 +1,791 @@
+/* ===================================================
+   MAIN STYLES & LAYOUT - MASCOTA VIRTUAL
+   =================================================== */
+
+/* Screen Visibility */
+.screen {
+  display: none;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  width: 100%;
+}
+
+.screen.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Titles & Headers */
+.clay-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+.clay-title.center {
+  text-align: center;
+}
+
+.badge-tag {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #B55272;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+/* PANTALLA 1: GIFT CARD */
+.card-gift {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.letter-content {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  border: 2px dashed #FF9EAA;
+  margin: 8px 0;
+}
+
+.letter-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-main);
+}
+
+.gift-box-wrapper {
+  margin: 16px 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gift-box {
+  width: 130px;
+  height: 130px;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gift-box:hover {
+  transform: scale(1.08) rotate(-2deg);
+}
+
+.gift-lid {
+  width: 140px;
+  height: 40px;
+  background: #FF6B8B;
+  border-radius: 16px;
+  position: absolute;
+  top: 0;
+  left: -5px;
+  box-shadow: 0 6px 12px rgba(200, 70, 100, 0.3), inset 2px 2px 4px rgba(255, 255, 255, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  transition: transform 0.5s ease;
+}
+
+.gift-bow {
+  font-size: 2.2rem;
+  margin-top: -15px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.gift-body {
+  width: 130px;
+  height: 100px;
+  background: #FFB3C1;
+  border-radius: 0 0 24px 24px;
+  position: absolute;
+  bottom: 0;
+  box-shadow: var(--clay-shadow-outer-sm), inset 4px -4px 8px rgba(180, 50, 80, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gift-sparkles {
+  font-size: 1.3rem;
+}
+
+.gift-box-wrapper.opened .gift-lid {
+  transform: translateY(-40px) rotate(-15deg);
+}
+
+.tap-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+
+/* PANTALLA 2: REVELACION */
+.card-reveal {
+  text-align: center;
+}
+
+.pet-reveal-container {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.pet-avatar-large {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFF5D6 0%, #FFE699 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* GIF Render & Fallbacks (Escalado automático responsivo) */
+.pet-gif-render {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.pet-avatar-large .pet-gif-render {
+  width: 140px;
+  height: 140px;
+}
+
+.pet-interactive .pet-gif-render {
+  width: 130px;
+  height: 130px;
+}
+
+/* ===================================================
+   DASHBOARD WIREFRAME LAYOUT (SEGÚN BOCETO REQUERIDO)
+   =================================================== */
+
+.dashboard-main-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 16px;
+  min-height: 85vh;
+  justify-content: space-between;
+}
+
+/* 1. Header Row (Nombre dueña | Progreso) */
+.dashboard-header-wireframe {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-pill {
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 6px 14px;
+}
+
+.owner-pill {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-main);
+}
+
+.progress-pill {
+  background: var(--clay-secondary);
+  color: #B55272;
+  gap: 6px;
+}
+
+.clay-btn-icon {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 2px;
+  line-height: 1;
+}
+
+/* 2. Banner Centrado (Nombre de la Mascota - Agrandado para celular) */
+.pet-name-banner-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  margin-top: 4px;
+}
+
+.pet-name-banner {
+  background: #FFF;
+  border: 4px solid #FF8DA1;
+  padding: 10px 32px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-main);
+  box-shadow: var(--clay-shadow-outer);
+  letter-spacing: 0.5px;
+}
+
+.pet-banner-icon {
+  font-size: 1.5rem;
+}
+
+.dev-day-toggle {
+  position: absolute;
+  right: -55px;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+}
+
+/* 3. Mascota Centrada Grande (Optimizada para pantalla de teléfono) */
+.wireframe-stage {
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.wireframe-pet-circle {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFF8DC 0%, #FFE599 100%);
+  border: 6px solid #FFFFFF;
+  box-shadow: 12px 12px 24px rgba(210, 140, 70, 0.3), -10px -10px 20px rgba(255, 255, 255, 0.95), inset 4px 4px 8px rgba(255, 255, 255, 0.8);
+}
+
+.wireframe-pet-circle .pet-gif-render {
+  width: 210px;
+  height: 210px;
+}
+
+/* 4. Fila Horizontal de 3 Estadísticas (Mimos | Comida | Energía) */
+.stats-triple-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.mini-stat-clay {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-md);
+  padding: 8px 6px;
+  box-shadow: var(--clay-shadow-outer-sm);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  text-align: center;
+}
+
+.mini-stat-header {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text-main);
+}
+
+.mini-track {
+  height: 12px;
+  padding: 1px;
+}
+
+/* 5. Botón Inferior Grande (Tareas del día) */
+.bottom-action-container {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.large-tasks-btn {
+  font-size: 1.25rem;
+  padding: 16px 24px;
+  border-radius: var(--radius-lg);
+  letter-spacing: 0.5px;
+  box-shadow: 8px 8px 18px rgba(240, 110, 140, 0.4), -6px -6px 12px rgba(255, 255, 255, 0.95);
+}
+
+/* Modal de Lista de Tareas */
+.tasks-modal-card {
+  max-width: 420px;
+}
+
+.tasks-modal-header h3 {
+  margin-top: 4px;
+}
+
+
+/* PANTALLA 3: TUTORIAL */
+.card-tutorial {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tutorial-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: -8px;
+}
+
+.tutorial-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.tutorial-item {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.tutorial-icon {
+  font-size: 2rem;
+  background: var(--clay-inset-bg);
+  padding: 10px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--clay-shadow-inset);
+}
+
+.tutorial-text h3 {
+  font-size: 1rem;
+  color: var(--text-main);
+}
+
+.tutorial-text p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+
+/* PANTALLA 4: DASHBOARD */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.pet-profile-pill {
+  padding: 6px 14px;
+}
+
+.pet-icon-emoji {
+  font-size: 1.4rem;
+}
+
+.pet-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-pet-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-main);
+  line-height: 1.1;
+}
+
+.dash-day-badge {
+  font-size: 0.75rem;
+  color: #B55272;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* Stats Panel */
+.stats-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.stat-bar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Pet Stage */
+.pet-stage-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0 20px 0;
+  position: relative;
+}
+
+.pet-bubble {
+  max-width: 280px;
+  margin-bottom: 14px;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.pet-interactive {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFF8DC 0%, #FFE599 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pet-interactive:hover {
+  transform: scale(1.05);
+}
+
+.pet-interactive:active {
+  transform: scale(0.95);
+}
+
+/* Hold Progress Ring */
+.hold-progress-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  backdrop-filter: blur(2px);
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+  position: absolute;
+}
+
+.hold-text {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #FF1493;
+  text-shadow: 0 1px 3px rgba(255,255,255,0.9);
+  z-index: 3;
+}
+
+/* Tasks Section */
+.tasks-section {
+  width: 100%;
+}
+
+.tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.tasks-header h3 {
+  font-size: 1.1rem;
+  color: var(--text-main);
+}
+
+.task-progress-tag {
+  font-size: 0.8rem;
+  background: #FFF;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: var(--clay-primary-hover);
+  box-shadow: var(--clay-shadow-outer-sm);
+}
+
+.tasks-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.task-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: var(--radius-lg);
+}
+
+.task-card.completed {
+  background: #E8F5E9;
+  border-color: #A5D6A7;
+  opacity: 0.9;
+}
+
+.task-icon {
+  font-size: 1.8rem;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 8px;
+  border-radius: var(--radius-md);
+}
+
+.task-details {
+  flex: 1;
+}
+
+.task-details h4 {
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.task-details p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  margin-bottom: 6px;
+}
+
+.status-hint {
+  font-size: 0.75rem;
+  color: #E91E63;
+  font-weight: 600;
+}
+
+.task-check {
+  font-size: 1.4rem;
+}
+
+/* POMPOMPURIN AVATAR RENDERER (SVG/CSS) */
+.pompompurin-avatar {
+  width: 120px;
+  height: 110px;
+  position: relative;
+  background: #FFE066;
+  border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+  box-shadow: inset -4px -6px 8px rgba(210, 150, 20, 0.3), inset 4px 4px 8px rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+/* Brown Beret Hat */
+.pompompurin-avatar::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  width: 44px;
+  height: 18px;
+  background: #5D3A1A;
+  border-radius: 50% 50% 30% 30%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* Ears */
+.pompompurin-avatar::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: -14px;
+  width: 24px;
+  height: 38px;
+  background: #FFE066;
+  border-radius: 50% 20% 50% 50%;
+  transform: rotate(-25deg);
+  box-shadow: -4px 18px 0 -14px #FFE066, inset -2px -2px 4px rgba(210, 150, 20, 0.3);
+}
+
+/* Face Elements inside JS (dynamic SVG overlays) */
+.pet-face-svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+
+/* MODALS */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(74, 58, 70, 0.4);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  background: #FFF0F4;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.mood-selector-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.mood-btn {
+  background: #FFF;
+  border: 2px solid var(--clay-secondary);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  box-shadow: var(--clay-shadow-outer-sm);
+  transition: all 0.2s ease;
+}
+
+.mood-btn:hover, .mood-btn.selected {
+  background: var(--clay-primary);
+  color: #FFF;
+  border-color: #FFF;
+}
+
+.pudding-feed-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.pet-avatar-medium {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFF5D6 0%, #FFE699 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pudding-tap-btn {
+  background: var(--clay-accent);
+  color: #4A3E00;
+  font-size: 1.2rem;
+  padding: 16px;
+}
+
+/* MINIGAME CANVAS & BASKET */
+.minigame-container {
+  height: 260px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 14px;
+}
+
+.game-score {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-weight: 700;
+  background: #FFF;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.minigame-area {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.basket-player {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2.5rem;
+  transition: left 0.05s linear;
+  cursor: pointer;
+}
+
+.falling-pudding {
+  position: absolute;
+  font-size: 1.8rem;
+  top: -30px;
+  animation: fallDown 2.2s linear infinite;
+}
+
+@keyframes fallDown {
+  0% { top: -30px; }
+  100% { top: 260px; }
+}
+
+.margin-top { margin-top: 16px; }
+.margin-top-sm { margin-top: 10px; }
+.full-width { width: 100%; }
+.text-center { text-align: center; }
