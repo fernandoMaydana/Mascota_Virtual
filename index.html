@@ -187,37 +187,42 @@
           </div>
         </header>
 
-        <!-- 2. TRES BARRAS DE ESTADO REUBICADAS ARRIBA (Mimos | Comida | Energía) -->
-        <div class="stats-triple-row top-stats-row">
-          <div class="mini-stat-clay">
-            <div class="mini-stat-header">
-              <span>💖 Mimos</span>
-              <span id="val-mimos" class="stat-val">80%</span>
-            </div>
-            <div class="clay-progress-track mini-track">
-              <div id="bar-mimos" class="clay-progress-fill fill-mimos" style="width: 80%;"></div>
-            </div>
-          </div>
-
-          <div class="mini-stat-clay">
-            <div class="mini-stat-header">
-              <span>🍮 Comida</span>
-              <span id="val-comida" class="stat-val">70%</span>
-            </div>
-            <div class="clay-progress-track mini-track">
-              <div id="bar-comida" class="clay-progress-fill fill-comida" style="width: 70%;"></div>
+        <!-- 2. TRES MEDIDORES CIRCULARES SUPERIORES (Mimos 💖 | Comida 🍮 | Energía ⚡) -->
+        <div class="stats-triple-row top-circular-stats-row">
+          
+          <!-- Mimos 💖 -->
+          <div class="circle-stat-card">
+            <div class="circle-stat-wrapper">
+              <svg class="circle-stat-svg" viewBox="0 0 70 70">
+                <circle class="circle-bg" cx="35" cy="35" r="28" stroke="rgba(255, 117, 143, 0.2)" stroke-width="6" fill="none"/>
+                <circle id="circle-mimos" class="circle-progress fill-mimos-ring" cx="35" cy="35" r="28" stroke="#FF758F" stroke-width="6" fill="none" stroke-dasharray="176" stroke-dashoffset="35" stroke-linecap="round"/>
+              </svg>
+              <div class="circle-emoji-center">💖</div>
             </div>
           </div>
 
-          <div class="mini-stat-clay">
-            <div class="mini-stat-header">
-              <span>⚡ Energía</span>
-              <span id="val-energia" class="stat-val">90%</span>
-            </div>
-            <div class="clay-progress-track mini-track">
-              <div id="bar-energia" class="clay-progress-fill fill-energia" style="width: 90%;"></div>
+          <!-- Comida 🍮 -->
+          <div class="circle-stat-card">
+            <div class="circle-stat-wrapper">
+              <svg class="circle-stat-svg" viewBox="0 0 70 70">
+                <circle class="circle-bg" cx="35" cy="35" r="28" stroke="rgba(255, 200, 87, 0.2)" stroke-width="6" fill="none"/>
+                <circle id="circle-comida" class="circle-progress fill-comida-ring" cx="35" cy="35" r="28" stroke="#FFC857" stroke-width="6" fill="none" stroke-dasharray="176" stroke-dashoffset="52" stroke-linecap="round"/>
+              </svg>
+              <div class="circle-emoji-center">🍮</div>
             </div>
           </div>
+
+          <!-- Energía ⚡ -->
+          <div class="circle-stat-card">
+            <div class="circle-stat-wrapper">
+              <svg class="circle-stat-svg" viewBox="0 0 70 70">
+                <circle class="circle-bg" cx="35" cy="35" r="28" stroke="rgba(112, 228, 239, 0.2)" stroke-width="6" fill="none"/>
+                <circle id="circle-energia" class="circle-progress fill-energia-ring" cx="35" cy="35" r="28" stroke="#70E4EF" stroke-width="6" fill="none" stroke-dasharray="176" stroke-dashoffset="17" stroke-linecap="round"/>
+              </svg>
+              <div class="circle-emoji-center">⚡</div>
+            </div>
+          </div>
+
         </div>
 
         <!-- 3. ÁREA CENTRADA DE LA MASCOTA (MAXIMIZADA AL ESPACIO DISPONIBLE) -->

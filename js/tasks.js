@@ -100,17 +100,34 @@ class TasksController {
 
   updateStatsUI(stats) {
     if (!stats) return;
-    const barM = document.getElementById('bar-mimos');
+    const circumference = 176; // 2 * PI * r (r=28)
+
+    // Mimos
+    const circleM = document.getElementById('circle-mimos');
     const valM = document.getElementById('val-mimos');
-    if (barM && valM) { barM.style.width = `${stats.mimos}%`; valM.textContent = `${stats.mimos}%`; }
+    if (valM) valM.textContent = `${stats.mimos}%`;
+    if (circleM) {
+      const offsetM = circumference - ((stats.mimos / 100) * circumference);
+      circleM.style.strokeDashoffset = Math.max(0, offsetM);
+    }
 
-    const barC = document.getElementById('bar-comida');
+    // Comida
+    const circleC = document.getElementById('circle-comida');
     const valC = document.getElementById('val-comida');
-    if (barC && valC) { barC.style.width = `${stats.comida}%`; valC.textContent = `${stats.comida}%`; }
+    if (valC) valC.textContent = `${stats.comida}%`;
+    if (circleC) {
+      const offsetC = circumference - ((stats.comida / 100) * circumference);
+      circleC.style.strokeDashoffset = Math.max(0, offsetC);
+    }
 
-    const barE = document.getElementById('bar-energia');
+    // Energía
+    const circleE = document.getElementById('circle-energia');
     const valE = document.getElementById('val-energia');
-    if (barE && valE) { barE.style.width = `${stats.energia}%`; valE.textContent = `${stats.energia}%`; }
+    if (valE) valE.textContent = `${stats.energia}%`;
+    if (circleE) {
+      const offsetE = circumference - ((stats.energia / 100) * circumference);
+      circleE.style.strokeDashoffset = Math.max(0, offsetE);
+    }
   }
 
   // Marcar tarea completada por código de día y número

@@ -232,38 +232,61 @@
   line-height: 1;
 }
 
-/* 2. Fila Horizontal de 3 Estadísticas REUBICADAS EN LA PARTE SUPERIOR */
-.stats-triple-row.top-stats-row {
+/* 2. MEDIDORES CIRCULARES SUPERIORES (Estilo Imagen de Referencia: Solo emoji al centro + Anillo) */
+.stats-triple-row.top-circular-stats-row {
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 6px;
-  margin: 6px 0 2px 0;
+  gap: 12px;
+  margin: 10px 0 6px 0;
+  justify-items: center;
 }
 
-.mini-stat-clay {
+.circle-stat-card {
   background: rgba(255, 255, 255, 0.95);
-  border-radius: var(--radius-md);
-  padding: 6px 4px;
+  border-radius: var(--radius-lg);
+  padding: 8px;
   box-shadow: var(--clay-shadow-outer-sm);
-  border: 2px solid rgba(255, 255, 255, 0.95);
-  text-align: center;
-}
-
-.mini-stat-header {
+  border: 3px solid rgba(255, 255, 255, 0.95);
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  font-size: 0.75rem;
-  font-weight: 700;
-  margin-bottom: 3px;
-  color: var(--text-main);
-  white-space: nowrap;
+  width: 100%;
+  max-width: 90px;
+  aspect-ratio: 1 / 1;
 }
 
-.mini-track {
-  height: 10px;
-  padding: 1px;
+.circle-stat-wrapper {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle-stat-svg {
+  width: 58px;
+  height: 58px;
+  transform: rotate(-90deg); /* Inicio arriba */
+}
+
+.circle-bg {
+  stroke-linecap: round;
+}
+
+.circle-progress {
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.circle-emoji-center {
+  position: absolute;
+  font-size: 1.5rem;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
 }
 
 /* 3. Área de la Mascota (Agrandada y centrada para celular igual que en la computadora) */
