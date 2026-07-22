@@ -1,0 +1,17 @@
+{
+  "name": "Mi Mascota Virtual 🍮",
+  "short_name": "Mascota",
+  "description": "Una mascota virtual interactiva en tonos pastel con estilo Claymorphism.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFEBF0",
+  "theme_color": "#FFB7C5",
+  "icons": [
+    {
+      "src": "assets/purin_preview.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
