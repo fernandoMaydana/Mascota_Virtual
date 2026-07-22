@@ -10,14 +10,9 @@ class PetController {
     this.petDialog = document.getElementById('pet-dialog');
     this.interactiveContainer = document.getElementById('pet-interactive-avatar');
     
-    // Hold gesture elements
-    this.holdOverlay = document.getElementById('hold-progress-overlay');
-    this.holdCircle = document.getElementById('hold-circle');
-    
-    this.holdTimer = null;
-    this.holdStartTime = 0;
-    this.holdDuration = 3000; // 3 segundos
-    this.isHolding = false;
+    this.mimoTapCount = 0;
+    this.mimoTarget = 5; // 5 toques acumulados para completar el mimo
+    this.quoteHideTimer = null;
 
     this.quotes = [
       "¡Hola amiga! Te estaba esperando con mucha alegría 💛",
@@ -81,106 +76,54 @@ class PetController {
     }
   }
 
-  sayRandomQuote() {
+  // Mostrar mensaje solo al tocar y desvanecer a los 3.5 segundos
+  sayQuote(text) {
     if (!this.petDialog) return;
+    this.petDialog.textContent = text;
+    this.petDialog.classList.remove('hidden');
+
+    if (this.quoteHideTimer) clearTimeout(this.quoteHideTimer);
+
+    this.quoteHideTimer = setTimeout(() => {
+      if (this.petDialog) this.petDialog.classList.add('hidden');
+    }, 3500);
+  }
+
+  sayRandomQuote() {
     const randomQuote = this.quotes[Math.floor(Math.random() * this.quotes.length)];
-    this.petDialog.textContent = randomQuote;
-    
-    // Animación de rebote al hablar
-    this.petDialog.classList.remove('pulse-subtle');
-    void this.petDialog.offsetWidth; // Trigger reflow
-    this.petDialog.classList.add('pulse-subtle');
+    this.sayQuote(randomQuote);
   }
 
   bindEvents() {
     if (!this.interactiveContainer) return;
 
-    // Clic / Tap simple
+    // Clic / Tap acumulativo (5 toques para mimo)
     this.interactiveContainer.addEventListener('click', (e) => {
-      if (this.isHolding) return;
-      this.sayRandomQuote();
-      this.setExpression('excited');
+      this.mimoTapCount++;
       this.spawnFloatingParticle(e.clientX, e.clientY);
-      
+      this.setExpression('excited');
+
+      // Actualizar estado de mimo
+      const statusText = document.getElementById('mimo-status-text');
+      if (statusText) {
+        statusText.textContent = `Toca a la mascota (${this.mimoTapCount}/${this.mimoTarget} mimos)`;
+      }
+
+      if (this.mimoTapCount >= this.mimoTarget) {
+        this.sayQuote("¡YAY! ¡Me diste todos tus mimos de hoy! 💕✨");
+        if (window.confetti) {
+          window.confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+        }
+        if (window.tasksController) {
+          window.tasksController.completeSpecificTask('day1', 'mimoDone');
+        }
+        if (statusText) statusText.textContent = '¡Mimos completados! 💕';
+      } else {
+        this.sayRandomQuote();
+      }
+
       setTimeout(() => this.setExpression('happy'), 1200);
     });
-
-    // Eventos de Mantener Presionado (Mimo de 3 seg)
-    const startHold = (e) => {
-      e.preventDefault();
-      this.isHolding = false;
-      this.holdStartTime = Date.now();
-      
-      if (this.holdOverlay) this.holdOverlay.classList.remove('hidden');
-      this.setExpression('petting');
-      this.sayQuote("¡Aww, qué rico mimo! Mantén presionado... 💕");
-
-      this.holdTimer = setInterval(() => {
-        const elapsed = Date.now() - this.holdStartTime;
-        const progress = Math.min(elapsed / this.holdDuration, 1);
-        
-        // Actualizar círculo SVG (radio 85px = circunferencia ~534px)
-        const circumference = 534;
-        const offset = circumference - (progress * circumference);
-        if (this.holdCircle) this.holdCircle.style.strokeDashoffset = offset;
-
-        if (progress >= 1) {
-          this.completeHoldMimo();
-        }
-      }, 50);
-    };
-
-    const cancelHold = () => {
-      if (this.holdTimer) {
-        clearInterval(this.holdTimer);
-        this.holdTimer = null;
-      }
-      if (this.holdOverlay) this.holdOverlay.classList.add('hidden');
-      if (this.holdCircle) this.holdCircle.style.strokeDashoffset = 534;
-      
-      setTimeout(() => {
-        this.isHolding = false;
-        this.setExpression('happy');
-      }, 300);
-    };
-
-    // Touch & Mouse bindings
-    this.interactiveContainer.addEventListener('mousedown', startHold);
-    this.interactiveContainer.addEventListener('mouseup', cancelHold);
-    this.interactiveContainer.addEventListener('mouseleave', cancelHold);
-
-    this.interactiveContainer.addEventListener('touchstart', startHold, { passive: false });
-    this.interactiveContainer.addEventListener('touchend', cancelHold);
-    this.interactiveContainer.addEventListener('touchcancel', cancelHold);
-  }
-
-  sayQuote(text) {
-    if (this.petDialog) this.petDialog.textContent = text;
-  }
-
-  completeHoldMimo() {
-    if (this.holdTimer) clearInterval(this.holdTimer);
-    if (this.holdOverlay) this.holdOverlay.classList.add('hidden');
-    this.isHolding = true;
-
-    // Lanzar confeti y sonido/vibración
-    if (window.confetti) {
-      window.confetti({
-        particleCount: 70,
-        spread: 60,
-        origin: { y: 0.6 }
-      });
-    }
-
-    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-
-    this.sayQuote("¡YAY! ¡Me diste un gran mimo de 3 segundos! 💖✨");
-    this.setExpression('excited');
-
-    // Notificar al controlador de tareas
-    if (window.tasksController) {
-      window.tasksController.completeTask('mimo');
-    }
   }
 
   spawnFloatingParticle(x, y) {

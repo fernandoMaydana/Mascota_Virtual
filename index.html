@@ -141,7 +141,7 @@
             <div class="tutorial-icon">🏡</div>
             <div class="tutorial-text">
               <h3>1. Cuida cada día</h3>
-              <p>Cuida a <span class="pet-name-placeholder">tu mascota</span> todos los días para mantener sus barras al 100%.</p>
+              <p>Toca a <span class="pet-name-placeholder">tu mascota</span> para mimarla y mantener sus barras al 100%.</p>
             </div>
           </div>
 
@@ -170,7 +170,7 @@
 
 
     <!-- ===================================================
-         PANTALLA 4: Dashboard Principal
+         PANTALLA 4: Dashboard Principal (REESTRUCTURADO LIMPIO)
          =================================================== -->
     <section id="screen-dashboard" class="screen hidden">
       <div class="clay-card dashboard-main-card">
@@ -184,47 +184,25 @@
 
           <div class="header-pill clay-pill progress-pill">
             <span id="dash-day-badge" class="progress-text">Día 1 / 5 🌸</span>
-            <button id="btn-open-settings" class="clay-btn-icon" title="Ajustes">⚙️</button>
           </div>
         </header>
 
-        <!-- 2. BADGE CENTRADO (Nombre de la mascota + Selector de Día - Editable con lápiz) -->
-        <div class="pet-name-banner-container">
-          <div class="clay-pill pet-name-banner" id="btn-edit-pet-name-trigger" style="cursor: pointer;" title="Editar nombre de la mascota">
-            <span class="pet-banner-icon">🍮</span>
-            <span id="dash-pet-name" class="pet-banner-text">Pompom</span>
-            <span class="edit-pencil-icon" style="font-size: 0.95rem; margin-left: 6px; opacity: 0.85;">✏️</span>
-          </div>
-          
-          <select id="select-day-picker" class="clay-btn-sm btn-ghost dev-day-select" title="Seleccionar Día">
-            <option value="1">Día 1 🌸</option>
-            <option value="2">Día 2 🍮</option>
-            <option value="3">Día 3 🌙</option>
-            <option value="4">Día 4 🍀</option>
-            <option value="5">Día 5 🎉</option>
-          </select>
+        <!-- 2. NOMBRE DE LA MASCOTA CENTRADO LIMPIO EN GRANDE (SIN BOTÓN, SIN EMOJIS, SIN LÁPIZ) -->
+        <div class="clean-pet-name-container">
+          <h1 id="dash-pet-name" class="clean-pet-title-top">Pompom</h1>
         </div>
 
         <!-- 3. ÁREA CENTRADA DE LA MASCOTA -->
         <div class="pet-stage-container wireframe-stage">
-          <!-- Bocadillo de Diálogo Dinámico -->
-          <div id="pet-dialog" class="speech-bubble clay-bubble pet-bubble pulse-subtle">
-            ¡Hazme clic o mantenme presionado para mimarme! 💕
+          <!-- Bocadillo de Diálogo Dinámico (Oculto por defecto, aparece solo al tocar) -->
+          <div id="pet-dialog" class="speech-bubble clay-bubble pet-bubble hidden">
+            ¡Hola! 💕
           </div>
 
-          <!-- Mascota Interactiva Grande Centrada -->
-          <div id="pet-interactive-avatar" class="pet-interactive clay-pet-shadow wireframe-pet-circle">
+          <!-- Mascota Interactiva Grande Centrada (Flotante sin tarjeta circular) -->
+          <div id="pet-interactive-avatar" class="pet-interactive wireframe-pet-circle">
             <img src="assets/purin_saludando.gif" id="dash-purin-gif" alt="Pompompurin Interactive" class="pet-gif-render" onerror="this.style.display='none'; document.getElementById('pet-sprite').style.display='flex';">
             <div id="pet-sprite" class="pompompurin-avatar happy-idle" style="display:none;"></div>
-            
-            <!-- Anillo de progreso al presionar 3 seg -->
-            <div id="hold-progress-overlay" class="hold-progress-overlay hidden">
-              <svg class="progress-ring" width="200" height="200">
-                <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.4)" stroke-width="10" fill="transparent" r="85" cx="100" cy="100"/>
-                <circle id="hold-circle" class="progress-ring__circle" stroke="#FF69B4" stroke-width="10" stroke-dasharray="534" stroke-dashoffset="534" stroke-linecap="round" fill="transparent" r="85" cx="100" cy="100"/>
-              </svg>
-              <span class="hold-text">¡MIMANDO! 💕</span>
-            </div>
           </div>
 
           <!-- Partículas flotantes -->
@@ -270,7 +248,7 @@
   </div>
 
   <!-- ===================================================
-       BARRA DE NAVEGACIÓN FLOTANTE CLAYMORPHISM (ESTILO DOCK MÓVIL)
+       BARRA DE NAVEGACIÓN FLOTANTE CLAYMORPHISM (DOCK MÓVIL)
        =================================================== -->
   <nav class="clay-bottom-dock">
     
@@ -336,9 +314,9 @@
           <div id="task-card-d1-1" class="clay-card task-card">
             <div class="task-icon">💖</div>
             <div class="task-details">
-              <h4>1. Darle su primer mimo</h4>
-              <p>Mantén presionada a la mascota por 3 segundos seguidos.</p>
-              <span id="mimo-status-text" class="status-hint">Mantén presionado en la mascota</span>
+              <h4>1. Darle sus mimos diarios</h4>
+              <p>Toca a la mascota 5 veces seguidas.</p>
+              <span id="mimo-status-text" class="status-hint">Toca a la mascota (0/5 mimos)</span>
             </div>
             <div class="task-check" id="check-d1-1">⬜</div>
           </div>
@@ -512,7 +490,6 @@
             <div class="task-details">
               <h4>4. Juego: Baño de Burbujas</h4>
               <p>Revieta 5 burbujas para dejar a tu amiguito reluciente.</p>
-
               <button id="btn-open-bubbles-modal" class="clay-btn-sm btn-primary margin-top-xs">Burbujas 🫧</button>
             </div>
             <div class="task-check" id="check-d4-4">⬜</div>
@@ -529,7 +506,7 @@
           <div id="task-card-d5-1" class="clay-card task-card clickable">
             <div class="task-icon">🎂</div>
             <div class="task-details">
-              <h4>1. Pastel de Celebraión de los 5 Días</h4>
+              <h4>1. Pastel de Celebración</h4>
               <p>¡Dale su pastel especial de aniversario!</p>
               <button id="btn-give-cake" class="clay-btn-sm btn-accent margin-top-xs">Dar Pastel 🎂</button>
             </div>
@@ -752,7 +729,7 @@
     <div class="clay-card modal-content text-center">
       <button class="modal-close-btn" data-close="modal-bubbles">&times;</button>
       <h3 class="clay-title">🫧 Baño de Burbujas</h3>
-      <p class="modal-subtitle">¡Revieta 5 burbujas de jabón para limpiar a la mascota!</p>
+      <p class="modal-subtitle">¡Revieta 5 burbujas para dejar a tu amiguito reluciente!</p>
       <div class="clay-inset-box margin-top" style="height: 180px; position: relative;" id="bubbles-area">
         <div id="bubble-count-badge" class="game-score">Burbujas: <span id="bubble-score-val">0</span> / 5 🫧</div>
         <button id="btn-start-bubbles" class="clay-btn btn-primary" style="margin-top: 60px;">Reventar Burbujas 🫧</button>
@@ -789,15 +766,26 @@
     </div>
   </div>
 
-  <!-- Modal Configuración / Supabase Credentials -->
+  <!-- Modal Configuración / Supabase Credentials + Selector de Día -->
   <div id="modal-settings" class="modal-overlay hidden">
     <div class="clay-card modal-content">
       <button class="modal-close-btn" data-close="modal-settings">&times;</button>
-      <h3 class="clay-title">⚙️ Ajustes & Supabase</h3>
-      <p class="modal-subtitle">Conecta con tu base de datos Supabase o mantén el modo local.</p>
+      <h3 class="clay-title">⚙️ Ajustes & Días</h3>
+      <p class="modal-subtitle">Cambia el día activo o ajusta las credenciales.</p>
 
       <div class="settings-form clay-inset-box margin-top">
         <div class="input-group">
+          <label class="input-label">📅 Seleccionar Día Activo (Día 1 a 5):</label>
+          <select id="select-day-picker" class="clay-input margin-top-xs">
+            <option value="1">Día 1 🌸 (Rosa Algodón)</option>
+            <option value="2">Día 2 🍮 (Amarillo Pudín)</option>
+            <option value="3">Día 3 🌙 (Lila Lavanda)</option>
+            <option value="4">Día 4 🍀 (Verde Menta)</option>
+            <option value="5">Día 5 🎉 (Fiesta Sorpresa)</option>
+          </select>
+        </div>
+
+        <div class="input-group margin-top-sm">
           <label class="input-label">Nombre de la dueña (Amiga):</label>
           <input type="text" id="cfg-owner-name" class="clay-input" placeholder="Ej: Valentina, María, Sofía...">
         </div>
