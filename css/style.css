@@ -207,9 +207,9 @@
 }
 
 .header-pill {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  padding: 6px 14px;
+  padding: 8px 16px;
 }
 
 .owner-pill {
@@ -232,15 +232,15 @@
   line-height: 1;
 }
 
-/* 2. Nombre Centrado Grande y Limpio */
+/* 2. Nombre Centrado Grande y Limpio (Agrandado para celular) */
 .clean-pet-name-container {
   width: 100%;
   text-align: center;
-  margin: 6px 0 -4px 0;
+  margin: 8px 0 -2px 0;
 }
 
 .clean-pet-title-top {
-  font-size: 2.3rem;
+  font-size: 2.7rem;
   font-weight: 700;
   color: var(--text-main);
   text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.9);
@@ -248,9 +248,9 @@
   margin: 0;
 }
 
-/* 3. Mascota Centrada Grande (Optimizada para pantalla de teléfono - Flotando sin cuadro) */
+/* 3. Mascota Centrada Grande (Agrandada a 290px para llenar la pantalla) */
 .wireframe-stage {
-  margin: 6px 0;
+  margin: 8px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -260,8 +260,8 @@
 }
 
 .wireframe-pet-circle {
-  width: 270px;
-  height: 270px;
+  width: 290px;
+  height: 290px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -272,8 +272,8 @@
 }
 
 .wireframe-pet-circle .pet-gif-render {
-  width: 260px;
-  height: 260px;
+  width: 280px;
+  height: 280px;
   object-fit: contain;
   mix-blend-mode: multiply; /* Meclado multiplicativo: elimina automáticamente el cuadro rosa/blanco del GIF */
   border-radius: 0;
@@ -289,19 +289,19 @@
 }
 
 
-/* 4. Fila Horizontal de 3 Estadísticas (Mimos | Comida | Energía) */
+/* 4. Fila Horizontal de 3 Estadísticas (Agrandadas para lectura fácil) */
 .stats-triple-row {
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px;
-  margin: 4px 0;
+  gap: 10px;
+  margin: 6px 0;
 }
 
 .mini-stat-clay {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.92);
   border-radius: var(--radius-md);
-  padding: 8px 6px;
+  padding: 10px 8px;
   box-shadow: var(--clay-shadow-outer-sm);
   border: 2px solid rgba(255, 255, 255, 0.9);
   text-align: center;
@@ -309,10 +309,11 @@
 
 .mini-stat-header {
   display: flex;
-  flex-direction: column;
-  font-size: 0.75rem;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.92rem;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   color: var(--text-main);
 }
 
