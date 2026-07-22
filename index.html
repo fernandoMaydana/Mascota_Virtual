@@ -264,19 +264,52 @@
           </div>
         </div>
 
-        <!-- 5. BOTÓN PRINCIPAL INFERIOR: ALIMENTAR Y TAREAS DEL DÍA -->
-        <div class="bottom-action-container" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
-          <button id="btn-quick-feed-pet" class="clay-btn btn-accent quick-feed-btn">
-            🍮 Alimentar
-          </button>
-          <button id="btn-open-tasks-modal" class="clay-btn btn-primary large-tasks-btn pulse">
-            📋 Tareas del día
-          </button>
-        </div>
-
       </div>
     </section>
 
+  </div>
+
+  <!-- ===================================================
+       BARRA DE NAVEGACIÓN FLOTANTE CLAYMORPHISM (ESTILO DOCK MÓVIL)
+       =================================================== -->
+  <nav class="clay-bottom-dock">
+    
+    <!-- Izquierda 1: Alimentar -->
+    <button id="dock-btn-feed" class="dock-item" title="Alimentar a la mascota">
+      <span class="dock-icon">🍮</span>
+      <span class="dock-label">Alimentar</span>
+    </button>
+
+    <!-- Izquierda 2: Dormir -->
+    <button id="dock-btn-sleep" class="dock-item" title="Hora de dormir / Siesta">
+      <span class="dock-icon">😴</span>
+      <span class="dock-label">Dormir</span>
+    </button>
+
+    <!-- CENTRO: BOTÓN ELEVADO TAREAS DEL DÍA (FAB) -->
+    <button id="dock-btn-tasks" class="dock-center-fab pulse" title="Misiones Diarias">
+      <span class="fab-icon">📋</span>
+      <span class="fab-label">TAREAS</span>
+    </button>
+
+    <!-- Derecha 1: Jugar -->
+    <button id="dock-btn-play" class="dock-item" title="Juegos interactivos">
+      <span class="dock-icon">🎮</span>
+      <span class="dock-label">Jugar</span>
+    </button>
+
+    <!-- Derecha 2: Ajustes -->
+    <button id="dock-btn-settings" class="dock-item" title="Ajustes">
+      <span class="dock-icon">⚙️</span>
+      <span class="dock-label">Ajustes</span>
+    </button>
+
+  </nav>
+
+  <!-- OVERLAY DE MODO NOCHE (DORMIR) -->
+  <div id="night-sleep-overlay" class="night-sleep-overlay pointer-events-none">
+    <div class="night-stars">🌙✨⭐💤</div>
+    <div class="night-text">Pompompurin está durmiendo plácidamente... 😴 Zzz...</div>
   </div>
 
 

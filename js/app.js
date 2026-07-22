@@ -199,47 +199,102 @@ class App {
       });
     });
 
-    // BOTÓN PRINCIPAL TAREAS DEL DÍA
-    const btnOpenTasksModal = document.getElementById('btn-open-tasks-modal');
-    if (btnOpenTasksModal) {
-      btnOpenTasksModal.addEventListener('click', () => {
-        this.openModal('modal-tasks-list');
-      });
-    }
-    // --- ALIMENTAR RÁPIDO DESDE EL DASHBOARD ---
-    const btnQuickFeed = document.getElementById('btn-quick-feed-pet');
+    // ===================================================
+    // DOCK FLOTANTE CLAYMORPHISM - ACCIONES RÁPIDAS
+    // ===================================================
+    
+    // 1. DOCK - TAREAS DEL DÍA (CENTRO FAB ELEVADO)
+    const dockTasks = document.getElementById('dock-btn-tasks');
+    const oldBtnTasks = document.getElementById('btn-open-tasks-modal');
+    const openTasks = () => this.openModal('modal-tasks-list');
+    if (dockTasks) dockTasks.addEventListener('click', openTasks);
+    if (oldBtnTasks) oldBtnTasks.addEventListener('click', openTasks);
+
+    // 2. DOCK - ALIMENTAR (IZQUIERDA 1)
+    const dockFeed = document.getElementById('dock-btn-feed');
+    const oldBtnFeed = document.getElementById('btn-quick-feed-pet');
     const dashPurinGif = document.getElementById('dash-purin-gif');
-    if (btnQuickFeed) {
-      btnQuickFeed.addEventListener('click', (e) => {
-        // 1. Mostrar animación de comer (GIF) y aplicar clase para encajar tamaño
+
+    const handleFeedAction = (e) => {
+      if (dashPurinGif) {
+        dashPurinGif.src = 'assets/purin_comiendo.gif';
+        dashPurinGif.classList.add('eating-active');
+      }
+      if (window.petController) {
+        window.petController.setExpression('eating');
+        window.petController.sayQuote('¡Mmmm! ¡Qué pudín tan delicioso! ¡Muchas gracias! 🍮✨');
+        if (e && e.clientX) window.petController.spawnFloatingParticle(e.clientX, e.clientY);
+      }
+
+      this.state.stats.comida = Math.min(100, this.state.stats.comida + 15);
+      window.storageManager.saveState(this.state);
+      if (window.tasksController) window.tasksController.updateTasksUI(this.state);
+
+      setTimeout(() => {
         if (dashPurinGif) {
-          dashPurinGif.src = 'assets/purin_comiendo.gif';
-          dashPurinGif.classList.add('eating-active');
+          dashPurinGif.src = 'assets/purin_saludando.gif';
+          dashPurinGif.classList.remove('eating-active');
         }
         if (window.petController) {
-          window.petController.setExpression('eating');
-          window.petController.sayQuote('¡Mmmm! ¡Qué pudín tan delicioso! ¡Muchas gracias! 🍮✨');
-          window.petController.spawnFloatingParticle(e.clientX, e.clientY);
+          window.petController.setExpression('happy');
+          window.petController.sayQuote('¡Hazme clic o mantenme presionado para mimarme! 💕');
+        }
+      }, 10000);
+    };
+
+    if (dockFeed) dockFeed.addEventListener('click', handleFeedAction);
+    if (oldBtnFeed) oldBtnFeed.addEventListener('click', handleFeedAction);
+
+    // 3. DOCK - DORMIR / MODO NOCHE (IZQUIERDA 2)
+    const dockSleep = document.getElementById('dock-btn-sleep');
+    const sleepOverlay = document.getElementById('night-sleep-overlay');
+
+    if (dockSleep) {
+      dockSleep.addEventListener('click', () => {
+        if (sleepOverlay) sleepOverlay.classList.add('active');
+        if (window.petController) {
+          window.petController.setExpression('happy');
+          window.petController.sayQuote('😴 Zzz... ¡Buenas noches! Tomando una siestita reparadora... ✨');
         }
 
-        // 2. Incrementar barra de comida y guardar
-        this.state.stats.comida = Math.min(100, this.state.stats.comida + 15);
+        this.state.stats.energia = Math.min(100, this.state.stats.energia + 25);
         window.storageManager.saveState(this.state);
-        if (window.tasksController) {
-          window.tasksController.updateTasksUI(this.state);
-        }
+        if (window.tasksController) window.tasksController.updateTasksUI(this.state);
 
-        // 3. Regresar al GIF de saludo después de 10 segundos
         setTimeout(() => {
-          if (dashPurinGif) {
-            dashPurinGif.src = 'assets/purin_saludando.gif';
-            dashPurinGif.classList.remove('eating-active');
-          }
+          if (sleepOverlay) sleepOverlay.classList.remove('active');
           if (window.petController) {
-            window.petController.setExpression('happy');
-            window.petController.sayQuote('¡Hazme clic o mantenme presionado para mimarme! 💕');
+            window.petController.sayQuote('¡Desperté lleno de energía y listo para jugar contigo! 🌟');
           }
-        }, 10000);
+        }, 5000);
+      });
+    }
+
+    // 4. DOCK - JUGAR (DERECHA 1)
+    const dockPlay = document.getElementById('dock-btn-play');
+    if (dockPlay) {
+      dockPlay.addEventListener('click', (e) => {
+        if (window.petController) {
+          window.petController.setExpression('excited');
+          window.petController.sayQuote('¡A JUGAR! 🎮 ¡Vamos a divertirnos atrapando pudines!');
+          if (e && e.clientX) window.petController.spawnFloatingParticle(e.clientX, e.clientY);
+        }
+        this.openModal('modal-minigame');
+      });
+    }
+
+    // 5. DOCK - AJUSTES (DERECHA 2)
+    const dockSettings = document.getElementById('dock-btn-settings');
+    if (dockSettings) {
+      dockSettings.addEventListener('click', () => {
+        const cfg = window.storageManager.getSupabaseConfig();
+        const ownerInput = document.getElementById('cfg-owner-name');
+        const urlInput = document.getElementById('cfg-supabase-url');
+        const keyInput = document.getElementById('cfg-supabase-key');
+        if (ownerInput) ownerInput.value = this.state.ownerName || '';
+        if (urlInput) urlInput.value = cfg.url || '';
+        if (keyInput) keyInput.value = cfg.key || '';
+        this.openModal('modal-settings');
       });
     }
 

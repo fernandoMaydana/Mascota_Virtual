@@ -808,18 +808,143 @@
   }
 }
 
-.margin-top {
-  margin-top: 16px;
+.margin-top { margin-top: 16px; }
+.margin-top-sm { margin-top: 10px; }
+.full-width { width: 100%; }
+.text-center { text-align: center; }
+
+/* ===================================================
+   DOCK DE NAVEGACIÓN FLOTANTE CLAYMORPHISM (ESTILO APP MÓVIL)
+   =================================================== */
+
+.clay-bottom-dock {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 420px;
+  height: 66px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 35px;
+  border: 3px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 14px 30px rgba(220, 110, 140, 0.32), inset 2px 2px 5px rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 12px;
+  z-index: 95;
 }
 
-.margin-top-sm {
-  margin-top: 10px;
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-main);
+  gap: 2px;
+  transition: transform 0.15s ease;
+  flex: 1;
 }
 
-.full-width {
-  width: 100%;
+.dock-item:active {
+  transform: scale(0.9);
 }
 
-.text-center {
-  text-align: center;
+.dock-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.dock-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* Botón Central Elevado (FAB - Tareas) */
+.dock-center-fab {
+  position: relative;
+  top: -24px;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF758F 0%, #FF8DA1 100%);
+  border: 4px solid #FFFFFF;
+  box-shadow: 0 10px 22px rgba(255, 117, 143, 0.5), inset 3px 3px 6px rgba(255, 255, 255, 0.8), inset -3px -3px 6px rgba(180, 50, 80, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #FFFFFF;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 100;
+}
+
+.dock-center-fab:hover {
+  transform: scale(1.08);
+}
+
+.dock-center-fab:active {
+  transform: scale(0.94);
+}
+
+.fab-icon {
+  font-size: 1.6rem;
+  margin-top: -2px;
+}
+
+.fab-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #FFF;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  margin-top: -2px;
+}
+
+/* Ajuste del contenedor del Dashboard para dejar espacio al Dock */
+.dashboard-main-card {
+  padding-bottom: 90px !important;
+}
+
+/* MODAL DE MODO NOCHE (DORMIR) */
+.night-sleep-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(20, 15, 35, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.night-sleep-overlay.active {
+  opacity: 1;
+}
+
+.night-stars {
+  font-size: 3rem;
+  animation: floatSlow 3s infinite ease-in-out;
+}
+
+.night-text {
+  color: #FFE066;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-top: 12px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
