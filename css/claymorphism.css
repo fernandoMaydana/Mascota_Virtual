@@ -1,9 +1,9 @@
 /* ===================================================
-   CLAYMORPHISM DESIGN SYSTEM - PASTEL PINK & CREAM
+   CLAYMORPHISM DESIGN SYSTEM - DYNAMIC DAILY PASTEL THEMES
    =================================================== */
 
 :root {
-  /* Color Palette */
+  /* Color Palette - Default Day 1 (Cotton Candy Pink) */
   --bg-gradient-start: #FFEBF0;
   --bg-gradient-end: #FFF5EC;
   --text-main: #4A3A46;
@@ -32,6 +32,71 @@
   --radius-pill: 50px;
 }
 
+/* ===================================================
+   TEMAS DE COLORES DINÁMICOS POR DÍA
+   =================================================== */
+
+/* DÍA 1: Rosa Algodón de Azúcar */
+body.theme-day-1 {
+  --bg-gradient-start: #FFEBF0;
+  --bg-gradient-end: #FFF5EC;
+  --clay-primary: #FF8DA1;
+  --clay-primary-hover: #FF758F;
+  --clay-secondary: #FFC2D1;
+  --clay-card-bg: #FFE5EC;
+  --clay-inset-bg: #F9D8E2;
+  --clay-shadow-outer: 12px 12px 24px rgba(220, 120, 150, 0.28), -8px -8px 20px rgba(255, 255, 255, 0.9);
+}
+
+/* DÍA 2: Amarillo Pudín Miel */
+body.theme-day-2 {
+  --bg-gradient-start: #FFF9E6;
+  --bg-gradient-end: #FFF0D6;
+  --clay-primary: #FFC857;
+  --clay-primary-hover: #FFAA00;
+  --clay-secondary: #FFE194;
+  --clay-card-bg: #FFF3D6;
+  --clay-inset-bg: #FFE4AF;
+  --clay-shadow-outer: 12px 12px 24px rgba(210, 160, 60, 0.25), -8px -8px 20px rgba(255, 255, 255, 0.9);
+}
+
+/* DÍA 3: Lila / Lavanda Pastel */
+body.theme-day-3 {
+  --bg-gradient-start: #F3E8FF;
+  --bg-gradient-end: #EBE0FF;
+  --clay-primary: #B583E6;
+  --clay-primary-hover: #9D5CE5;
+  --clay-secondary: #D8B4F8;
+  --clay-card-bg: #EFE2FE;
+  --clay-inset-bg: #DEC5F7;
+  --clay-shadow-outer: 12px 12px 24px rgba(160, 110, 210, 0.25), -8px -8px 20px rgba(255, 255, 255, 0.9);
+}
+
+/* DÍA 4: Menta / Verde Sabio Pastel */
+body.theme-day-4 {
+  --bg-gradient-start: #E8F8F0;
+  --bg-gradient-end: #DDF3E8;
+  --clay-primary: #72D69A;
+  --clay-primary-hover: #48C779;
+  --clay-secondary: #A8E8C0;
+  --clay-card-bg: #E0F4E8;
+  --clay-inset-bg: #BEECCE;
+  --clay-shadow-outer: 12px 12px 24px rgba(80, 180, 120, 0.25), -8px -8px 20px rgba(255, 255, 255, 0.9);
+}
+
+/* DÍA 5: Dorado / Fiesta Celestial Sorpresa 🎉 */
+body.theme-day-5 {
+  --bg-gradient-start: #FFF0F5;
+  --bg-gradient-end: #FFE4E1;
+  --clay-primary: #FF758F;
+  --clay-primary-hover: #FF4D6D;
+  --clay-secondary: #FFB3C1;
+  --clay-accent: #FFD700;
+  --clay-card-bg: #FFE5EC;
+  --clay-inset-bg: #FFC2D1;
+  --clay-shadow-outer: 12px 12px 24px rgba(240, 90, 130, 0.35), -8px -8px 20px rgba(255, 255, 255, 0.95);
+}
+
 /* Global Reset & Base */
 * {
   box-sizing: border-box;
@@ -51,6 +116,7 @@ body.clay-bg {
   justify-content: center;
   align-items: center;
   padding: 16px;
+  transition: background 0.6s ease;
 }
 
 /* Base Container */
@@ -71,7 +137,7 @@ body.clay-bg {
   padding: 24px;
   border: 4px solid rgba(255, 255, 255, 0.6);
   position: relative;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* Clay Inset Box (Plastilina hundida) */
@@ -106,7 +172,7 @@ body.clay-bg {
   padding: 14px 24px;
   cursor: pointer;
   box-shadow: var(--clay-btn-shadow);
-  transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, background-color 0.3s ease, box-shadow 0.15s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;

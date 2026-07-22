@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="css/claymorphism.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="clay-bg">
+<body class="clay-bg theme-day-1">
 
   <!-- Container Principal -->
   <div id="app" class="app-container">
@@ -67,7 +67,7 @@
 
 
     <!-- ===================================================
-         PANTALLA 2: La Revelación & Nombre (con GIF de Purin)
+         PANTALLA 2: La Revelación & Nombre
          =================================================== -->
     <section id="screen-reveal" class="screen hidden">
       <div class="clay-card card-reveal">
@@ -102,7 +102,7 @@
           </button>
         </div>
 
-        <!-- PASO 2: ¿Por qué ese nombre? (Solo título centrado, textarea y botón Guardar) -->
+        <!-- PASO 2: ¿Por qué ese nombre? -->
         <div id="name-step-2" class="name-reason-clean hidden">
           <h2 class="clay-title center big-reason-title">¿Por qué ese nombre?</h2>
           
@@ -140,8 +140,8 @@
           <div class="clay-card tutorial-item float-2">
             <div class="tutorial-icon">🍮</div>
             <div class="tutorial-text">
-              <h3>2. Cumple tus tareas</h3>
-              <p>Completa tus mini misiones diarias para regalarle mimos y pudines.</p>
+              <h3>2. Cumple tus 4 tareas</h3>
+              <p>Completa las 4 mini misiones diarias sobre ti y tu mascota.</p>
             </div>
           </div>
 
@@ -162,7 +162,7 @@
 
 
     <!-- ===================================================
-         PANTALLA 4: Dashboard Principal (REDISEÑADO SEGÚN WIREFRAME)
+         PANTALLA 4: Dashboard Principal
          =================================================== -->
     <section id="screen-dashboard" class="screen hidden">
       <div class="clay-card dashboard-main-card">
@@ -180,16 +180,21 @@
           </div>
         </header>
 
-        <!-- 2. BADGE CENTRADO (Nombre de la mascota) -->
+        <!-- 2. BADGE CENTRADO (Nombre de la mascota + Selector de Día - Editable con lápiz) -->
         <div class="pet-name-banner-container">
-          <div class="clay-pill pet-name-banner">
+          <div class="clay-pill pet-name-banner" id="btn-edit-pet-name-trigger" style="cursor: pointer;" title="Editar nombre de la mascota">
             <span class="pet-banner-icon">🍮</span>
             <span id="dash-pet-name" class="pet-banner-text">Pompom</span>
+            <span class="edit-pencil-icon" style="font-size: 0.95rem; margin-left: 6px; opacity: 0.85;">✏️</span>
           </div>
           
-          <button id="btn-toggle-day" class="clay-btn-sm btn-ghost dev-day-toggle" title="Cambiar Día (Dev / Prueba)">
-            📅 <span id="day-toggle-label">Día 2</span>
-          </button>
+          <select id="select-day-picker" class="clay-btn-sm btn-ghost dev-day-select" title="Seleccionar Día">
+            <option value="1">Día 1 🌸</option>
+            <option value="2">Día 2 🍮</option>
+            <option value="3">Día 3 🌙</option>
+            <option value="4">Día 4 🍀</option>
+            <option value="5">Día 5 🎉</option>
+          </select>
         </div>
 
         <!-- 3. ÁREA CENTRADA DE LA MASCOTA -->
@@ -218,9 +223,8 @@
           <div id="particles-container"></div>
         </div>
 
-        <!-- 4. TRES BARRAS DE ESTADO EN FILA HORIZONTAL (Mimos | Comida | Energía) -->
+        <!-- 4. TRES BARRAS DE ESTADO EN FILA HORIZONTAL -->
         <div class="stats-triple-row">
-          
           <div class="mini-stat-clay">
             <div class="mini-stat-header">
               <span>💖 Mimos</span>
@@ -250,11 +254,13 @@
               <div id="bar-energia" class="clay-progress-fill fill-energia" style="width: 90%;"></div>
             </div>
           </div>
-
         </div>
 
-        <!-- 5. BOTÓN PRINCIPAL INFERIOR: TAREAS DEL DÍA -->
-        <div class="bottom-action-container">
+        <!-- 5. BOTÓN PRINCIPAL INFERIOR: ALIMENTAR Y TAREAS DEL DÍA -->
+        <div class="bottom-action-container" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+          <button id="btn-quick-feed-pet" class="clay-btn btn-accent quick-feed-btn">
+            🍮 Alimentar
+          </button>
           <button id="btn-open-tasks-modal" class="clay-btn btn-primary large-tasks-btn pulse">
             📋 Tareas del día
           </button>
@@ -267,111 +273,256 @@
 
 
   <!-- ===================================================
-       MODALES Claymorphic
+       MODALES Claymorphic & TAREAS DE LOS 5 DÍAS
        =================================================== -->
 
-  <!-- MODAL PRINCIPAL: LISTA DE TAREAS DEL DÍA (DÍA 1 / DÍA 2) -->
+  <!-- MODAL PRINCIPAL: LISTA DE TAREAS DEL DÍA (4 TAREAS POR DÍA) -->
   <div id="modal-tasks-list" class="modal-overlay hidden">
     <div class="clay-card modal-content tasks-modal-card">
       <button class="modal-close-btn" data-close="modal-tasks-list">&times;</button>
       
       <div class="tasks-modal-header text-center">
-        <span class="badge-tag">📋 Misiones Diarias</span>
+        <span class="badge-tag" id="tasks-day-badge-tag">📋 Misiones del Día</span>
         <h3 class="clay-title" id="tasks-modal-title">Tareas del Día 1</h3>
       </div>
 
-      <!-- DÍA 1 CONTENEDOR EN MODAL -->
+      <!-- DÍA 1 (4 TAREAS) -->
       <div id="day-1-tasks" class="day-tasks-container margin-top">
         <div class="tasks-header">
-          <span id="day1-progress-badge" class="task-progress-tag">0/3 completadas</span>
+          <span id="day1-progress-badge" class="task-progress-tag">0/4 completadas</span>
         </div>
-
         <div class="tasks-grid">
-          <!-- Tarea 1: Primer Mimo (3 seg) -->
-          <div id="task-card-mimo" class="clay-card task-card">
+          <div id="task-card-d1-1" class="clay-card task-card">
             <div class="task-icon">💖</div>
             <div class="task-details">
               <h4>1. Darle su primer mimo</h4>
               <p>Mantén presionada a la mascota por 3 segundos seguidos.</p>
-              <div class="task-action-wrapper">
-                <span id="mimo-status-text" class="status-hint">Mantén presionado sobre la mascota</span>
-              </div>
+              <span id="mimo-status-text" class="status-hint">Mantén presionado en la mascota</span>
             </div>
-            <div class="task-check" id="check-mimo">⬜</div>
+            <div class="task-check" id="check-d1-1">⬜</div>
           </div>
 
-          <!-- Tarea 2: Estado de Ánimo -->
-          <div id="task-card-mood" class="clay-card task-card clickable">
+          <div id="task-card-d1-2" class="clay-card task-card clickable">
             <div class="task-icon">🌈</div>
             <div class="task-details">
-              <h4>2. Registrar tu estado de ánimo</h4>
-              <p>¿Cómo te sientes hoy? Cuéntale a <span class="pet-name-placeholder">tu mascota</span>.</p>
-              <button id="btn-open-mood-modal" class="clay-btn-sm btn-accent margin-top-xs">
-                Registrar Ánimo 📝
-              </button>
+              <h4>2. Tu estado de ánimo de hoy</h4>
+              <p>Cuéntale a <span class="pet-name-placeholder">tu mascota</span> cómo te sientes.</p>
+              <button id="btn-open-mood-modal" class="clay-btn-sm btn-accent margin-top-xs">Registrar Ánimo 📝</button>
             </div>
-            <div class="task-check" id="check-mood">⬜</div>
+            <div class="task-check" id="check-d1-2">⬜</div>
           </div>
 
-          <!-- Tarea 3: Notificaciones -->
-          <div id="task-card-notif" class="clay-card task-card clickable">
+          <div id="task-card-d1-3" class="clay-card task-card clickable">
             <div class="task-icon">🔔</div>
             <div class="task-details">
               <h4>3. Activar recordatorios</h4>
               <p>Para que no te extrañe en tus momentos ocupados.</p>
-              <button id="btn-activate-notif" class="clay-btn-sm btn-primary margin-top-xs">
-                Activar Notificaciones 🔔
-              </button>
+              <button id="btn-activate-notif" class="clay-btn-sm btn-primary margin-top-xs">Activar Alertas 🔔</button>
             </div>
-            <div class="task-check" id="check-notif">⬜</div>
+            <div class="task-check" id="check-d1-3">⬜</div>
+          </div>
+
+          <div id="task-card-d1-4" class="clay-card task-card clickable">
+            <div class="task-icon">🌸</div>
+            <div class="task-details">
+              <h4>4. ¿Cuál es tu flor o color favorito?</h4>
+              <p>Para conocer más sobre la dueña.</p>
+              <button id="btn-open-favcolor-modal" class="clay-btn-sm btn-accent margin-top-xs">Responder 🌸</button>
+            </div>
+            <div class="task-check" id="check-d1-4">⬜</div>
           </div>
         </div>
       </div>
 
-      <!-- DÍA 2 CONTENEDOR EN MODAL -->
+      <!-- DÍA 2 (4 TAREAS) -->
       <div id="day-2-tasks" class="day-tasks-container hidden margin-top">
         <div class="tasks-header">
-          <span id="day2-progress-badge" class="task-progress-tag">0/3 completadas</span>
+          <span id="day2-progress-badge" class="task-progress-tag">0/4 completadas</span>
         </div>
-
         <div class="tasks-grid">
-          <!-- Tarea 1 Día 2: Alimentar Pudín -->
-          <div id="task-card-feed" class="clay-card task-card clickable">
+          <div id="task-card-d2-1" class="clay-card task-card clickable">
             <div class="task-icon">🍮</div>
             <div class="task-details">
-              <h4>1. Darle su pudín favorito</h4>
-              <p>¡A Pompompurin le encanta comer pudines caseros!</p>
-              <button id="btn-open-feed-modal" class="clay-btn-sm btn-primary margin-top-xs">
-                Dar Pudín 🍮
-              </button>
+              <h4>1. Alimentar con pudines</h4>
+              <p>Darle 3 pudines caseros a tu amiguito.</p>
+              <button id="btn-open-feed-modal" class="clay-btn-sm btn-primary margin-top-xs">Dar Pudín 🍮</button>
             </div>
-            <div class="task-check" id="check-feed">⬜</div>
+            <div class="task-check" id="check-d2-1">⬜</div>
           </div>
 
-          <!-- Tarea 2 Día 2: Mensaje / Cápsula -->
-          <div id="task-card-memory" class="clay-card task-card clickable">
+          <div id="task-card-d2-2" class="clay-card task-card clickable">
             <div class="task-icon">💌</div>
             <div class="task-details">
-              <h4>2. Abrir la Nota Diaria del Día 2</h4>
-              <p>Un mensaje secreto guardado especialmente para hoy.</p>
-              <button id="btn-open-memory-modal" class="clay-btn-sm btn-accent margin-top-xs">
-                Leer Nota Secreta 💌
-              </button>
+              <h4>2. Leer Nota Secreta Día 2</h4>
+              <p>Un mensaje especial guardado para hoy.</p>
+              <button id="btn-open-memory-modal" class="clay-btn-sm btn-accent margin-top-xs">Leer Nota 💌</button>
             </div>
-            <div class="task-check" id="check-memory">⬜</div>
+            <div class="task-check" id="check-d2-2">⬜</div>
           </div>
 
-          <!-- Tarea 3 Día 2: Mini-juego -->
-          <div id="task-card-minigame" class="clay-card task-card clickable">
+          <div id="task-card-d2-3" class="clay-card task-card clickable">
             <div class="task-icon">🎮</div>
             <div class="task-details">
               <h4>3. Juego: Atrapa Pudines</h4>
-              <p>Consigue al menos 5 pudines cayendo del cielo.</p>
-              <button id="btn-open-minigame-modal" class="clay-btn-sm btn-primary margin-top-xs">
-                Jugar Mini-juego 🕹️
-              </button>
+              <p>Atrapa 5 pudines en la canastita.</p>
+              <button id="btn-open-minigame-modal" class="clay-btn-sm btn-primary margin-top-xs">Jugar 🕹️</button>
             </div>
-            <div class="task-check" id="check-minigame">⬜</div>
+            <div class="task-check" id="check-d2-3">⬜</div>
+          </div>
+
+          <div id="task-card-d2-4" class="clay-card task-card clickable">
+            <div class="task-icon">🎶</div>
+            <div class="task-details">
+              <h4>4. Tu canción o música favorita</h4>
+              <p>¿Qué música te alegra tus días?</p>
+              <button id="btn-open-music-modal" class="clay-btn-sm btn-accent margin-top-xs">Escribir Canción 🎶</button>
+            </div>
+            <div class="task-check" id="check-d2-4">⬜</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÍA 3 (4 TAREAS) -->
+      <div id="day-3-tasks" class="day-tasks-container hidden margin-top">
+        <div class="tasks-header">
+          <span id="day3-progress-badge" class="task-progress-tag">0/4 completadas</span>
+        </div>
+        <div class="tasks-grid">
+          <div id="task-card-d3-1" class="clay-card task-card clickable">
+            <div class="task-icon">😴</div>
+            <div class="task-details">
+              <h4>1. Hora de la Siesta</h4>
+              <p>Abriga a tu mascota para que tome una siestita.</p>
+              <button id="btn-do-sleep-task" class="clay-btn-sm btn-primary margin-top-xs">Dar Siesta 😴</button>
+            </div>
+            <div class="task-check" id="check-d3-1">⬜</div>
+          </div>
+
+          <div id="task-card-d3-2" class="clay-card task-card clickable">
+            <div class="task-icon">🌙</div>
+            <div class="task-details">
+              <h4>2. ¿Cuál es tu Lugar Feliz?</h4>
+              <p>Escribe tu lugar favorito para relajarte o viajar.</p>
+              <button id="btn-open-happyplace-modal" class="clay-btn-sm btn-accent margin-top-xs">Responder 🌙</button>
+            </div>
+            <div class="task-check" id="check-d3-2">⬜</div>
+          </div>
+
+          <div id="task-card-d3-3" class="clay-card task-card clickable">
+            <div class="task-icon">📸</div>
+            <div class="task-details">
+              <h4>3. Álbum de Recuerdos Bonitos</h4>
+              <p>Mira la tarjeta de un recuerdo especial.</p>
+              <button id="btn-open-album-modal" class="clay-btn-sm btn-accent margin-top-xs">Abrir Álbum 📸</button>
+            </div>
+            <div class="task-check" id="check-d3-3">⬜</div>
+          </div>
+
+          <div id="task-card-d3-4" class="clay-card task-card clickable">
+            <div class="task-icon">🌟</div>
+            <div class="task-details">
+              <h4>4. Juego: Estrellas Fugaces</h4>
+              <p>Toca 5 estrellas fugaces para pedir un deseo.</p>
+              <button id="btn-open-stargame-modal" class="clay-btn-sm btn-primary margin-top-xs">Pedir Deseo 🌟</button>
+            </div>
+            <div class="task-check" id="check-d3-4">⬜</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÍA 4 (4 TAREAS) -->
+      <div id="day-4-tasks" class="day-tasks-container hidden margin-top">
+        <div class="tasks-header">
+          <span id="day4-progress-badge" class="task-progress-tag">0/4 completadas</span>
+        </div>
+        <div class="tasks-grid">
+          <div id="task-card-d4-1" class="clay-card task-card clickable">
+            <div class="task-icon">🧁</div>
+            <div class="task-details">
+              <h4>1. Dar Galleta Especial</h4>
+              <p>Premia a tu mascota con un bocadillo delicioso.</p>
+              <button id="btn-give-cookie" class="clay-btn-sm btn-primary margin-top-xs">Dar Galleta 🧁</button>
+            </div>
+            <div class="task-check" id="check-d4-1">⬜</div>
+          </div>
+
+          <div id="task-card-d4-2" class="clay-card task-card clickable">
+            <div class="task-icon">💌</div>
+            <div class="task-details">
+              <h4>2. Muro de Gratitud</h4>
+              <p>Escribe 3 cosas bonitas por las que estás agradecida hoy.</p>
+              <button id="btn-open-gratitude-modal" class="clay-btn-sm btn-accent margin-top-xs">Escribir Gratitud 💌</button>
+            </div>
+            <div class="task-check" id="check-d4-2">⬜</div>
+          </div>
+
+          <div id="task-card-d4-3" class="clay-card task-card clickable">
+            <div class="task-icon">🧩</div>
+            <div class="task-details">
+              <h4>3. Trivia Curiosa de la Dueña</h4>
+              <p>Responde un secreto o dato divertido sobre ti.</p>
+              <button id="btn-open-trivia-modal" class="clay-btn-sm btn-accent margin-top-xs">Responder Trivia 🧩</button>
+            </div>
+            <div class="task-check" id="check-d4-3">⬜</div>
+          </div>
+
+          <div id="task-card-d4-4" class="clay-card task-card clickable">
+            <div class="task-icon">🫧</div>
+            <div class="task-details">
+              <h4>4. Juego: Baño de Burbujas</h4>
+              <p>Revieta 5 burbujas para dejar a tu amiguito reluciente.</p>
+
+              <button id="btn-open-bubbles-modal" class="clay-btn-sm btn-primary margin-top-xs">Burbujas 🫧</button>
+            </div>
+            <div class="task-check" id="check-d4-4">⬜</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÍA 5 (4 TAREAS - SORPRESA FINAL 🎉) -->
+      <div id="day-5-tasks" class="day-tasks-container hidden margin-top">
+        <div class="tasks-header">
+          <span id="day5-progress-badge" class="task-progress-tag">0/4 completadas</span>
+        </div>
+        <div class="tasks-grid">
+          <div id="task-card-d5-1" class="clay-card task-card clickable">
+            <div class="task-icon">🎂</div>
+            <div class="task-details">
+              <h4>1. Pastel de Celebraión de los 5 Días</h4>
+              <p>¡Dale su pastel especial de aniversario!</p>
+              <button id="btn-give-cake" class="clay-btn-sm btn-accent margin-top-xs">Dar Pastel 🎂</button>
+            </div>
+            <div class="task-check" id="check-d5-1">⬜</div>
+          </div>
+
+          <div id="task-card-d5-2" class="clay-card task-card clickable">
+            <div class="task-icon">🎁</div>
+            <div class="task-details">
+              <h4>2. Abrir Regalo Sorpresa Final</h4>
+              <p>¡Desbloquea la carta definitiva de tu sorpresa!</p>
+              <button id="btn-open-final-gift-modal" class="clay-btn-sm btn-primary margin-top-xs">Abrir Regalo 🎁</button>
+            </div>
+            <div class="task-check" id="check-d5-2">⬜</div>
+          </div>
+
+          <div id="task-card-d5-3" class="clay-card task-card clickable">
+            <div class="task-icon">💖</div>
+            <div class="task-details">
+              <h4>3. Mensaje en el Corazón</h4>
+              <p>Guarda tu deseo final para la mascota y tu amistad.</p>
+              <button id="btn-open-wish-modal" class="clay-btn-sm btn-accent margin-top-xs">Escribir Deseo 💖</button>
+            </div>
+            <div class="task-check" id="check-d5-3">⬜</div>
+          </div>
+
+          <div id="task-card-d5-4" class="clay-card task-card clickable">
+            <div class="task-icon">🎆</div>
+            <div class="task-details">
+              <h4>4. Fiesta de Fuegos Artificiales</h4>
+              <p>¡Lanza la gran fiesta de celebraciones!</p>
+              <button id="btn-trigger-fireworks" class="clay-btn-sm btn-primary margin-top-xs">Lanzar Fiesta 🎆</button>
+            </div>
+            <div class="task-check" id="check-d5-4">⬜</div>
           </div>
         </div>
       </div>
@@ -382,6 +533,8 @@
     </div>
   </div>
 
+
+  <!-- MODALES DE PREGUNTAS Y TAREAS INTERACTIVAS -->
 
   <!-- Modal Estado de Ánimo (Día 1 Tarea 2) -->
   <div id="modal-mood" class="modal-overlay hidden">
@@ -407,6 +560,18 @@
     </div>
   </div>
 
+  <!-- Modal Flor/Color Favorito (Día 1 Tarea 4) -->
+  <div id="modal-favcolor" class="modal-overlay hidden">
+    <div class="clay-card modal-content">
+      <button class="modal-close-btn" data-close="modal-favcolor">&times;</button>
+      <h3 class="clay-title">🌸 Conociendo a la Dueña</h3>
+      <p class="modal-subtitle">¿Cuál es tu flor o tu color favorito en el mundo?</p>
+      <div class="clay-inset-box margin-top">
+        <input type="text" id="favcolor-input" class="clay-input" placeholder="Ej: Rosas amarillas, color lila pastel, girasoles...">
+      </div>
+      <button id="btn-save-favcolor" class="clay-btn btn-primary full-width margin-top">Guardar Respuesta 💖</button>
+    </div>
+  </div>
 
   <!-- Modal Alimentar Pudín (Día 2 Tarea 1) -->
   <div id="modal-feed" class="modal-overlay hidden">
@@ -414,26 +579,18 @@
       <button class="modal-close-btn" data-close="modal-feed">&times;</button>
       <h3 class="clay-title">🍮 Hora del Pudín</h3>
       <p class="modal-subtitle">Toca el pudín para dárselo a <span class="pet-name-placeholder">tu mascota</span>!</p>
-
       <div class="pudding-feed-area">
         <div id="feed-pet-sprite" class="pet-avatar-medium">
           <img src="assets/purin_saludando.gif" alt="Feed Purin" class="pet-gif-render" onerror="this.style.display='none'; document.getElementById('feed-svg-fallback').style.display='flex';">
           <div id="feed-svg-fallback" class="pompompurin-avatar happy-idle" style="display:none;"></div>
         </div>
-        
         <div class="pudding-counter-badge clay-pill">
           Pudines comidos: <span id="feed-count">0</span> / 3 🍮
         </div>
-
-        <div class="pudding-items-grid">
-          <button class="clay-btn pudding-tap-btn" id="btn-pudding-tap">
-            🍮 ¡Dar Pudín Delicioso!
-          </button>
-        </div>
+        <button class="clay-btn pudding-tap-btn" id="btn-pudding-tap">🍮 ¡Dar Pudín Delicioso!</button>
       </div>
     </div>
   </div>
-
 
   <!-- Modal Nota Secreta Día 2 (Día 2 Tarea 2) -->
   <div id="modal-memory" class="modal-overlay hidden">
@@ -443,7 +600,6 @@
         <span class="badge-tag">💌 Mensaje Secreto Día 2</span>
         <h3 class="clay-title">¡Para ti en tu Día 2!</h3>
       </div>
-      
       <div class="letter-content clay-inset-box margin-top">
         <p class="letter-text">
           "¡Feliz Día 2! Espero que tu amiguito virtual te esté sacando muchas sonrisas hoy. 
@@ -451,33 +607,146 @@
           ¡Sigue cuidando a tu mascota!"
         </p>
       </div>
-
-      <button id="btn-read-memory-done" class="clay-btn btn-accent full-width margin-top">
-        ¡Guardar en mis recuerdos! 💖
-      </button>
+      <button id="btn-read-memory-done" class="clay-btn btn-accent full-width margin-top">¡Guardar en mis recuerdos! 💖</button>
     </div>
   </div>
-
 
   <!-- Modal Minijuego Atrapa Pudines (Día 2 Tarea 3) -->
   <div id="modal-minigame" class="modal-overlay hidden">
     <div class="clay-card modal-content text-center">
       <button class="modal-close-btn" data-close="modal-minigame">&times;</button>
       <h3 class="clay-title">🎮 Atrapa los Pudines</h3>
-      <p class="modal-subtitle">¡Mueve la canastita con el dedo o ratón para atrapar 5 pudines!</p>
-
+      <p class="modal-subtitle">¡Mueve la canastita para atrapar 5 pudines!</p>
       <div id="minigame-canvas-container" class="minigame-container clay-inset-box">
         <div id="game-score-badge" class="game-score">Puntos: <span id="game-score-val">0</span> / 5</div>
         <div id="minigame-area" class="minigame-area">
           <div id="basket-player" class="basket-player">🧺</div>
         </div>
-        <button id="btn-start-minigame" class="clay-btn btn-primary">
-          ¡Empezar Juego! 🚀
-        </button>
+        <button id="btn-start-minigame" class="clay-btn btn-primary">¡Empezar Juego! 🚀</button>
       </div>
     </div>
   </div>
 
+  <!-- Modal Música Favorita (Día 2 Tarea 4) -->
+  <div id="modal-music" class="modal-overlay hidden">
+    <div class="clay-card modal-content">
+      <button class="modal-close-btn" data-close="modal-music">&times;</button>
+      <h3 class="clay-title">🎶 Tu Música Favorita</h3>
+      <p class="modal-subtitle">¿Qué canción o artista te pone de buen humor siempre?</p>
+      <div class="clay-inset-box margin-top">
+        <input type="text" id="music-input" class="clay-input" placeholder="Ej: Tu canción favorita o artista preferido...">
+      </div>
+      <button id="btn-save-music" class="clay-btn btn-primary full-width margin-top">Guardar Canción 🎵</button>
+    </div>
+  </div>
+
+  <!-- Modal Lugar Feliz (Día 3 Tarea 2) -->
+  <div id="modal-happyplace" class="modal-overlay hidden">
+    <div class="clay-card modal-content">
+      <button class="modal-close-btn" data-close="modal-happyplace">&times;</button>
+      <h3 class="clay-title">🌙 Tu Lugar Feliz</h3>
+      <p class="modal-subtitle">¿Cuál es tu rincón o lugar favorito para descansar o soñar?</p>
+      <div class="clay-inset-box margin-top">
+        <input type="text" id="happyplace-input" class="clay-input" placeholder="Ej: La playa al atardecer, mi camita con café, la montaña...">
+      </div>
+      <button id="btn-save-happyplace" class="clay-btn btn-primary full-width margin-top">Guardar Lugar 🌙</button>
+    </div>
+  </div>
+
+  <!-- Modal Álbum de Recuerdos (Día 3 Tarea 3) -->
+  <div id="modal-album" class="modal-overlay hidden">
+    <div class="clay-card modal-content text-center">
+      <button class="modal-close-btn" data-close="modal-album">&times;</button>
+      <h3 class="clay-title">📸 Recuerdos Bonitos</h3>
+      <p class="modal-subtitle">Un recordatorio especial guardado en tu álbum:</p>
+      <div class="clay-inset-box margin-top text-center">
+        <div style="font-size: 3rem; margin: 10px 0;">💖✨🌸</div>
+        <p class="letter-text">"Los mejores recuerdos son aquellos que nos hacen sonreír sin importar cuánto tiempo pase."</p>
+      </div>
+      <button id="btn-close-album" class="clay-btn btn-accent full-width margin-top">Guardar Recuerdo 📸</button>
+    </div>
+  </div>
+
+  <!-- Modal Estrellas Fugaces (Día 3 Tarea 4) -->
+  <div id="modal-stargame" class="modal-overlay hidden">
+    <div class="clay-card modal-content text-center">
+      <button class="modal-close-btn" data-close="modal-stargame">&times;</button>
+      <h3 class="clay-title">🌟 Estrellas Fugaces</h3>
+      <p class="modal-subtitle">¡Toca 5 estrellas fugaces para pedir tu deseo!</p>
+      <div class="clay-inset-box margin-top" style="height: 180px; position: relative;" id="star-game-area">
+        <div id="star-count-badge" class="game-score">Deseos: <span id="star-score-val">0</span> / 5 🌟</div>
+        <button id="btn-start-stargame" class="clay-btn btn-primary" style="margin-top: 60px;">Empezar Estrellas ✨</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Gratitud / Muro (Día 4 Tarea 2) -->
+  <div id="modal-gratitude" class="modal-overlay hidden">
+    <div class="clay-card modal-content">
+      <button class="modal-close-btn" data-close="modal-gratitude">&times;</button>
+      <h3 class="clay-title">💌 Muro de Gratitud</h3>
+      <p class="modal-subtitle">Escribe algo bonito por lo que te sientas agradecida hoy:</p>
+      <div class="clay-inset-box margin-top">
+        <textarea id="gratitude-input" class="clay-textarea" placeholder="Ej: Agradecida por mi familia, por una buena merienda, por tener amigos lindos..." rows="3"></textarea>
+      </div>
+      <button id="btn-save-gratitude" class="clay-btn btn-primary full-width margin-top">Guardar en Muro 💖</button>
+    </div>
+  </div>
+
+  <!-- Modal Trivia Dueña (Día 4 Tarea 3) -->
+  <div id="modal-trivia" class="modal-overlay hidden">
+    <div class="clay-card modal-content">
+      <button class="modal-close-btn" data-close="modal-trivia">&times;</button>
+      <h3 class="clay-title">🧩 Trivia Curiosa</h3>
+      <p class="modal-subtitle">¿Cuál es un superpoder secreto o un talento tuyo que poca gente sabe?</p>
+      <div class="clay-inset-box margin-top">
+        <input type="text" id="trivia-input" class="clay-input" placeholder="Ej: Puedo adivinar canciones en 2 segundos, hago los mejores postres...">
+      </div>
+      <button id="btn-save-trivia" class="clay-btn btn-primary full-width margin-top">Guardar Dato 🧩</button>
+    </div>
+  </div>
+
+  <!-- Modal Burbujas (Día 4 Tarea 4) -->
+  <div id="modal-bubbles" class="modal-overlay hidden">
+    <div class="clay-card modal-content text-center">
+      <button class="modal-close-btn" data-close="modal-bubbles">&times;</button>
+      <h3 class="clay-title">🫧 Baño de Burbujas</h3>
+      <p class="modal-subtitle">¡Revieta 5 burbujas de jabón para limpiar a la mascota!</p>
+      <div class="clay-inset-box margin-top" style="height: 180px; position: relative;" id="bubbles-area">
+        <div id="bubble-count-badge" class="game-score">Burbujas: <span id="bubble-score-val">0</span> / 5 🫧</div>
+        <button id="btn-start-bubbles" class="clay-btn btn-primary" style="margin-top: 60px;">Reventar Burbujas 🫧</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Regalo Sorpresa Final Día 5 (Día 5 Tarea 2) -->
+  <div id="modal-finalgift" class="modal-overlay hidden">
+    <div class="clay-card modal-content text-center">
+      <button class="modal-close-btn" data-close="modal-finalgift">&times;</button>
+      <span class="badge-tag">🎁 ¡SORPRESA FINAL DÍA 5!</span>
+      <h3 class="clay-title">¡Feliz Día 5! 🎉</h3>
+      <div class="letter-content clay-inset-box margin-top text-left">
+        <p class="letter-text">
+          "¡Llegamos al Día 5! Gracias por cuidar a tu amiguito virtual con tanto cariño todos estos días. 
+          Recuerda que eres alguien super especial, llena de luz y sonrisas. ¡Espero que este regalo te haya hecho muy feliz!"
+        </p>
+      </div>
+      <button id="btn-read-finalgift-done" class="clay-btn btn-primary full-width margin-top">¡Guardar Sorpresa Final! 💖</button>
+    </div>
+  </div>
+
+  <!-- Modal Deseo Final Día 5 (Día 5 Tarea 3) -->
+  <div id="modal-wish" class="modal-overlay hidden">
+    <div class="clay-card modal-content">
+      <button class="modal-close-btn" data-close="modal-wish">&times;</button>
+      <h3 class="clay-title">💖 Tu Deseo Final</h3>
+      <p class="modal-subtitle">Escribe un deseo o mensaje especial en el corazón de la mascota:</p>
+      <div class="clay-inset-box margin-top">
+        <textarea id="wish-input" class="clay-textarea" placeholder="Escribe tu deseo especial para ti y para el futuro... ✨" rows="3"></textarea>
+      </div>
+      <button id="btn-save-wish" class="clay-btn btn-primary full-width margin-top">Guardar Deseo 💖</button>
+    </div>
+  </div>
 
   <!-- Modal Configuración / Supabase Credentials -->
   <div id="modal-settings" class="modal-overlay hidden">

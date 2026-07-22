@@ -9,7 +9,7 @@ class App {
   }
 
   async init() {
-    console.log("🚀 Inicializando Mascota Virtual App...");
+    console.log("🚀 Inicializando Mascota Virtual App (5 Días)...");
     
     // Cargar estado inicial
     this.state = await window.storageManager.loadState();
@@ -17,7 +17,7 @@ class App {
     // Configurar escuchadores de eventos UI
     this.bindEvents();
     
-    // Sincronizar nombre de mascota en todos los textos
+    // Sincronizar nombre de mascota y dueña en todos los textos
     this.updatePetNamePlaceholders();
 
     // Determinar pantalla de inicio según progreso guardado
@@ -49,8 +49,7 @@ class App {
     }
 
     target.classList.remove('hidden');
-    // Forzar reflow para animación
-    void target.offsetWidth;
+    void target.offsetWidth; // Force reflow
     target.classList.add('active');
 
     this.activeScreen = screenId;
@@ -71,24 +70,30 @@ class App {
   }
 
   renderCurrentDayView() {
-    const day = this.state.currentDay || 1;
+    const day = parseInt(this.state.currentDay || 1);
     const badge = document.getElementById('dash-day-badge');
     const modalTitle = document.getElementById('tasks-modal-title');
-    const day1Box = document.getElementById('day-1-tasks');
-    const day2Box = document.getElementById('day-2-tasks');
-    const toggleLabel = document.getElementById('day-toggle-label');
+    const dayPicker = document.getElementById('select-day-picker');
 
     if (badge) badge.textContent = `Día ${day} / 5 🌸`;
     if (modalTitle) modalTitle.textContent = `Tareas del Día ${day}`;
+    if (dayPicker) dayPicker.value = day.toString();
 
-    if (day === 1) {
-      if (day1Box) day1Box.classList.remove('hidden');
-      if (day2Box) day2Box.classList.add('hidden');
-      if (toggleLabel) toggleLabel.textContent = 'Día 2';
-    } else {
-      if (day1Box) day1Box.classList.add('hidden');
-      if (day2Box) day2Box.classList.remove('hidden');
-      if (toggleLabel) toggleLabel.textContent = 'Día 1';
+    // Ocultar todos los contenedores de días y mostrar solo el activo
+    for (let i = 1; i <= 5; i++) {
+      const box = document.getElementById(`day-${i}-tasks`);
+      if (box) {
+        if (i === day) {
+          box.classList.remove('hidden');
+        } else {
+          box.classList.add('hidden');
+        }
+      }
+    }
+
+    // Aplicar tema de color dinámico por día
+    if (window.tasksController) {
+      window.tasksController.applyDayTheme(day);
     }
   }
 
@@ -108,7 +113,7 @@ class App {
     if (giftBox) giftBox.addEventListener('click', handleOpenGift);
     if (btnOpenGift) btnOpenGift.addEventListener('click', handleOpenGift);
 
-    // --- PANTALLA 2: GUARDAR NOMBRE (PASO 1) ---
+    // --- PANTALLA 2: GUARDAR NOMBRE (PASO 1 & PASO 2) ---
     const btnSaveName = document.getElementById('btn-save-name');
     const nameInput = document.getElementById('pet-name-input');
     const revealTopHeader = document.getElementById('reveal-top-header');
@@ -126,17 +131,14 @@ class App {
         window.storageManager.saveState(this.state);
         this.updatePetNamePlaceholders();
         
-        // Ocultar cabecera superior (GIF/avatar) y mostrar pantalla limpia del Paso 2
         if (revealTopHeader) revealTopHeader.classList.add('hidden');
         if (nameStep1) nameStep1.classList.add('hidden');
         if (nameStep2) nameStep2.classList.remove('hidden');
       });
     }
 
-    // --- PANTALLA 2: GUARDAR RAZÓN / CHISTE INTERNO (PASO 2) ---
     const btnSaveReason = document.getElementById('btn-save-reason');
     const reasonInput = document.getElementById('pet-name-reason-input');
-
     if (btnSaveReason) {
       btnSaveReason.addEventListener('click', () => {
         const reasonVal = reasonInput ? reasonInput.value.trim() : '';
@@ -146,8 +148,6 @@ class App {
         if (window.confetti) {
           window.confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
         }
-
-        // Transicionar al tutorial
         this.switchScreen('tutorial');
       });
     }
@@ -160,17 +160,38 @@ class App {
       });
     }
 
-    // --- BARRA SUPERIOR: ALTERNAR DÍA 1 / DÍA 2 ---
-    const btnToggleDay = document.getElementById('btn-toggle-day');
-    if (btnToggleDay) {
-      btnToggleDay.addEventListener('click', () => {
-        this.state.currentDay = this.state.currentDay === 1 ? 2 : 1;
+    // --- SELECTOR DE DÍA EN BARRA (1 A 5) ---
+    const selectDayPicker = document.getElementById('select-day-picker');
+    if (selectDayPicker) {
+      selectDayPicker.addEventListener('change', (e) => {
+        this.state.currentDay = parseInt(e.target.value);
         window.storageManager.saveState(this.state);
         this.renderCurrentDayView();
+        window.tasksController.updateTasksUI(this.state);
       });
     }
 
-    // --- MODALES: ABRIR & CERRAR ---
+    // --- EDITAR NOMBRE DESDE EL DASHBOARD ---
+    const btnEditNameTrigger = document.getElementById('btn-edit-pet-name-trigger');
+    if (btnEditNameTrigger) {
+      btnEditNameTrigger.addEventListener('click', () => {
+        const nameStep1 = document.getElementById('name-step-1');
+        const nameStep2 = document.getElementById('name-step-2');
+        const revealTopHeader = document.getElementById('reveal-top-header');
+
+        // Resetear visibilidad de los pasos
+        if (nameStep1) nameStep1.classList.remove('hidden');
+        if (nameStep2) nameStep2.classList.add('hidden');
+        if (revealTopHeader) revealTopHeader.classList.remove('hidden');
+
+        // Precargar el valor actual del nombre en el campo
+        const nameInput = document.getElementById('pet-name-input');
+        if (nameInput) nameInput.value = this.state.petName || '';
+
+        // Transicionar a la pantalla de asignación de nombre
+        this.switchScreen('reveal');
+      });
+    }
     document.querySelectorAll('[data-close]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const modalId = e.target.getAttribute('data-close');
@@ -178,16 +199,57 @@ class App {
       });
     });
 
-    // Modal Estado de Ánimo (Día 1 Tarea 2)
-    const btnOpenMood = document.getElementById('btn-open-mood-modal');
-    if (btnOpenMood) {
-      btnOpenMood.addEventListener('click', () => this.openModal('modal-mood'));
+    // BOTÓN PRINCIPAL TAREAS DEL DÍA
+    const btnOpenTasksModal = document.getElementById('btn-open-tasks-modal');
+    if (btnOpenTasksModal) {
+      btnOpenTasksModal.addEventListener('click', () => {
+        this.openModal('modal-tasks-list');
+      });
+    }
+    // --- ALIMENTAR RÁPIDO DESDE EL DASHBOARD ---
+    const btnQuickFeed = document.getElementById('btn-quick-feed-pet');
+    const dashPurinGif = document.getElementById('dash-purin-gif');
+    if (btnQuickFeed) {
+      btnQuickFeed.addEventListener('click', (e) => {
+        // 1. Mostrar animación de comer (GIF) y aplicar clase para encajar tamaño
+        if (dashPurinGif) {
+          dashPurinGif.src = 'assets/purin_comiendo.gif';
+          dashPurinGif.classList.add('eating-active');
+        }
+        if (window.petController) {
+          window.petController.setExpression('eating');
+          window.petController.sayQuote('¡Mmmm! ¡Qué pudín tan delicioso! ¡Muchas gracias! 🍮✨');
+          window.petController.spawnFloatingParticle(e.clientX, e.clientY);
+        }
+
+        // 2. Incrementar barra de comida y guardar
+        this.state.stats.comida = Math.min(100, this.state.stats.comida + 15);
+        window.storageManager.saveState(this.state);
+        if (window.tasksController) {
+          window.tasksController.updateTasksUI(this.state);
+        }
+
+        // 3. Regresar al GIF de saludo después de 10 segundos
+        setTimeout(() => {
+          if (dashPurinGif) {
+            dashPurinGif.src = 'assets/purin_saludando.gif';
+            dashPurinGif.classList.remove('eating-active');
+          }
+          if (window.petController) {
+            window.petController.setExpression('happy');
+            window.petController.sayQuote('¡Hazme clic o mantenme presionado para mimarme! 💕');
+          }
+        }, 10000);
+      });
     }
 
-    const moodBtns = document.querySelectorAll('.mood-btn');
-    moodBtns.forEach(btn => {
+    // --- EVENEMENTOS DÍA 1 ---
+    const btnOpenMood = document.getElementById('btn-open-mood-modal');
+    if (btnOpenMood) btnOpenMood.addEventListener('click', () => this.openModal('modal-mood'));
+
+    document.querySelectorAll('.mood-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        moodBtns.forEach(b => b.classList.remove('selected'));
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         window.tasksController.selectedMood = btn.getAttribute('data-mood');
       });
@@ -197,79 +259,195 @@ class App {
     if (btnSaveMood) {
       btnSaveMood.addEventListener('click', () => {
         const selected = window.tasksController.selectedMood;
-        if (!selected) {
-          alert('Por favor selecciona una emoción del día 😊');
-          return;
-        }
-        const note = document.getElementById('mood-note-input').value;
-        this.state.moodHistory.push({
-          date: new Date().toLocaleDateString(),
-          mood: selected,
-          note: note
-        });
-        window.tasksController.completeTask('mood');
+        if (!selected) { alert('Selecciona tu emoción 😊'); return; }
+        this.state.moodHistory.push({ date: new Date().toLocaleDateString(), mood: selected });
+        window.tasksController.completeSpecificTask('day1', 'moodDone');
         this.closeModal('modal-mood');
-        alert(`✨ Ánimo registrado: "${selected}". ¡Tu amiguito lo ha guardado en su corazón! 💕`);
       });
     }
 
-    // Tarea 3 Día 1: Notificaciones
     const btnNotif = document.getElementById('btn-activate-notif');
-    if (btnNotif) {
-      btnNotif.addEventListener('click', () => {
-        window.tasksController.requestNotificationPermission();
+    if (btnNotif) btnNotif.addEventListener('click', () => window.tasksController.requestNotificationPermission());
+
+    const btnOpenFavColor = document.getElementById('btn-open-favcolor-modal');
+    if (btnOpenFavColor) btnOpenFavColor.addEventListener('click', () => this.openModal('modal-favcolor'));
+
+    const btnSaveFavColor = document.getElementById('btn-save-favcolor');
+    if (btnSaveFavColor) {
+      btnSaveFavColor.addEventListener('click', () => {
+        const val = document.getElementById('favcolor-input').value.trim();
+        this.state.ownerAnswers.favColor = val;
+        window.tasksController.completeSpecificTask('day1', 'favColorDone');
+        this.closeModal('modal-favcolor');
       });
     }
 
-    // Modal Feed (Día 2 Tarea 1)
+    // --- EVENTOS DÍA 2 ---
     const btnOpenFeed = document.getElementById('btn-open-feed-modal');
-    if (btnOpenFeed) {
-      btnOpenFeed.addEventListener('click', () => this.openModal('modal-feed'));
-    }
+    if (btnOpenFeed) btnOpenFeed.addEventListener('click', () => this.openModal('modal-feed'));
 
     const btnPuddingTap = document.getElementById('btn-pudding-tap');
-    if (btnPuddingTap) {
-      btnPuddingTap.addEventListener('click', () => {
-        window.tasksController.tapPuddingFeed();
-      });
-    }
+    if (btnPuddingTap) btnPuddingTap.addEventListener('click', () => window.tasksController.tapPuddingFeed());
 
-    // Modal Nota Secreta (Día 2 Tarea 2)
     const btnOpenMemory = document.getElementById('btn-open-memory-modal');
-    if (btnOpenMemory) {
-      btnOpenMemory.addEventListener('click', () => this.openModal('modal-memory'));
-    }
+    if (btnOpenMemory) btnOpenMemory.addEventListener('click', () => this.openModal('modal-memory'));
 
     const btnMemoryDone = document.getElementById('btn-read-memory-done');
     if (btnMemoryDone) {
       btnMemoryDone.addEventListener('click', () => {
         this.closeModal('modal-memory');
-        window.tasksController.completeTask('memory');
+        window.tasksController.completeSpecificTask('day2', 'memoryDone');
       });
     }
 
-    // Modal Minijuego (Día 2 Tarea 3)
     const btnOpenMinigame = document.getElementById('btn-open-minigame-modal');
-    if (btnOpenMinigame) {
-      btnOpenMinigame.addEventListener('click', () => this.openModal('modal-minigame'));
-    }
+    if (btnOpenMinigame) btnOpenMinigame.addEventListener('click', () => this.openModal('modal-minigame'));
 
     const btnStartMinigame = document.getElementById('btn-start-minigame');
-    if (btnStartMinigame) {
-      btnStartMinigame.addEventListener('click', () => {
-        window.tasksController.startMinigame();
+    if (btnStartMinigame) btnStartMinigame.addEventListener('click', () => window.tasksController.startMinigame());
+
+    const btnOpenMusic = document.getElementById('btn-open-music-modal');
+    if (btnOpenMusic) btnOpenMusic.addEventListener('click', () => this.openModal('modal-music'));
+
+    const btnSaveMusic = document.getElementById('btn-save-music');
+    if (btnSaveMusic) {
+      btnSaveMusic.addEventListener('click', () => {
+        this.state.ownerAnswers.favMusic = document.getElementById('music-input').value.trim();
+        window.tasksController.completeSpecificTask('day2', 'musicDone');
+        this.closeModal('modal-music');
       });
     }
 
-    // --- BOTÓN PRINCIPAL: ABRIR MODAL DE TAREAS DEL DÍA ---
-    const btnOpenTasksModal = document.getElementById('btn-open-tasks-modal');
-    if (btnOpenTasksModal) {
-      btnOpenTasksModal.addEventListener('click', () => {
-        this.openModal('modal-tasks-list');
+    // --- EVENTOS DÍA 3 ---
+    const btnDoSleep = document.getElementById('btn-do-sleep-task');
+    if (btnDoSleep) {
+      btnDoSleep.addEventListener('click', () => {
+        if (window.petController) {
+          window.petController.setExpression('eating');
+          window.petController.sayQuote('😴 Zzz... ¡Gracias por tu abrigador abrazo para mi siestita!');
+        }
+        window.tasksController.completeSpecificTask('day3', 'sleepDone');
       });
     }
 
-    // Modal Settings / Supabase
+    const btnOpenHappyPlace = document.getElementById('btn-open-happyplace-modal');
+    if (btnOpenHappyPlace) btnOpenHappyPlace.addEventListener('click', () => this.openModal('modal-happyplace'));
+
+    const btnSaveHappyPlace = document.getElementById('btn-save-happyplace');
+    if (btnSaveHappyPlace) {
+      btnSaveHappyPlace.addEventListener('click', () => {
+        this.state.ownerAnswers.happyPlace = document.getElementById('happyplace-input').value.trim();
+        window.tasksController.completeSpecificTask('day3', 'happyPlaceDone');
+        this.closeModal('modal-happyplace');
+      });
+    }
+
+    const btnOpenAlbum = document.getElementById('btn-open-album-modal');
+    if (btnOpenAlbum) btnOpenAlbum.addEventListener('click', () => this.openModal('modal-album'));
+
+    const btnCloseAlbum = document.getElementById('btn-close-album');
+    if (btnCloseAlbum) {
+      btnCloseAlbum.addEventListener('click', () => {
+        window.tasksController.completeSpecificTask('day3', 'albumDone');
+        this.closeModal('modal-album');
+      });
+    }
+
+    const btnOpenStarGame = document.getElementById('btn-open-stargame-modal');
+    if (btnOpenStarGame) btnOpenStarGame.addEventListener('click', () => this.openModal('modal-stargame'));
+
+    const btnStartStarGame = document.getElementById('btn-start-stargame');
+    if (btnStartStarGame) btnStartStarGame.addEventListener('click', () => window.tasksController.startStarGame());
+
+    // --- EVENTOS DÍA 4 ---
+    const btnGiveCookie = document.getElementById('btn-give-cookie');
+    if (btnGiveCookie) {
+      btnGiveCookie.addEventListener('click', () => {
+        if (window.petController) {
+          window.petController.setExpression('eating');
+          window.petController.sayQuote('🧁 ¡Mmm! ¡La galleta más crujiente y rica!');
+        }
+        window.tasksController.completeSpecificTask('day4', 'cookieDone');
+      });
+    }
+
+    const btnOpenGratitude = document.getElementById('btn-open-gratitude-modal');
+    if (btnOpenGratitude) btnOpenGratitude.addEventListener('click', () => this.openModal('modal-gratitude'));
+
+    const btnSaveGratitude = document.getElementById('btn-save-gratitude');
+    if (btnSaveGratitude) {
+      btnSaveGratitude.addEventListener('click', () => {
+        this.state.ownerAnswers.gratitude = document.getElementById('gratitude-input').value.trim();
+        window.tasksController.completeSpecificTask('day4', 'gratitudeDone');
+        this.closeModal('modal-gratitude');
+      });
+    }
+
+    const btnOpenTrivia = document.getElementById('btn-open-trivia-modal');
+    if (btnOpenTrivia) btnOpenTrivia.addEventListener('click', () => this.openModal('modal-trivia'));
+
+    const btnSaveTrivia = document.getElementById('btn-save-trivia');
+    if (btnSaveTrivia) {
+      btnSaveTrivia.addEventListener('click', () => {
+        this.state.ownerAnswers.trivia = document.getElementById('trivia-input').value.trim();
+        window.tasksController.completeSpecificTask('day4', 'triviaDone');
+        this.closeModal('modal-trivia');
+      });
+    }
+
+    const btnOpenBubbles = document.getElementById('btn-open-bubbles-modal');
+    if (btnOpenBubbles) btnOpenBubbles.addEventListener('click', () => this.openModal('modal-bubbles'));
+
+    const btnStartBubbles = document.getElementById('btn-start-bubbles');
+    if (btnStartBubbles) btnStartBubbles.addEventListener('click', () => window.tasksController.startBubbleGame());
+
+    // --- EVENTOS DÍA 5 (SORPRESA FINAL 🎉) ---
+    const btnGiveCake = document.getElementById('btn-give-cake');
+    if (btnGiveCake) {
+      btnGiveCake.addEventListener('click', () => {
+        if (window.petController) {
+          window.petController.setExpression('excited');
+          window.petController.sayQuote('🎂 ¡FELIZ ANIVERSARIO DE 5 DÍAS! 🎂');
+        }
+        window.tasksController.completeSpecificTask('day5', 'cakeDone');
+      });
+    }
+
+    const btnOpenFinalGift = document.getElementById('btn-open-final-gift-modal');
+    if (btnOpenFinalGift) btnOpenFinalGift.addEventListener('click', () => this.openModal('modal-finalgift'));
+
+    const btnReadFinalGift = document.getElementById('btn-read-finalgift-done');
+    if (btnReadFinalGift) {
+      btnReadFinalGift.addEventListener('click', () => {
+        window.tasksController.completeSpecificTask('day5', 'surpriseGiftDone');
+        this.closeModal('modal-finalgift');
+      });
+    }
+
+    const btnOpenWish = document.getElementById('btn-open-wish-modal');
+    if (btnOpenWish) btnOpenWish.addEventListener('click', () => this.openModal('modal-wish'));
+
+    const btnSaveWish = document.getElementById('btn-save-wish');
+    if (btnSaveWish) {
+      btnSaveWish.addEventListener('click', () => {
+        this.state.ownerAnswers.finalWish = document.getElementById('wish-input').value.trim();
+        window.tasksController.completeSpecificTask('day5', 'wishMessageDone');
+        this.closeModal('modal-wish');
+      });
+    }
+
+    const btnTriggerFireworks = document.getElementById('btn-trigger-fireworks');
+    if (btnTriggerFireworks) {
+      btnTriggerFireworks.addEventListener('click', () => {
+        if (window.confetti) {
+          window.confetti({ particleCount: 200, spread: 100, origin: { y: 0.4 } });
+        }
+        window.tasksController.completeSpecificTask('day5', 'partyFireworksDone');
+        alert('🎆 ¡Felicidades por completar los 5 días maravillosos con tu mascota virtual! 🎉💖');
+      });
+    }
+
+    // --- AJUSTES / SETTINGS ---
     const btnOpenSettings = document.getElementById('btn-open-settings');
     if (btnOpenSettings) {
       btnOpenSettings.addEventListener('click', () => {

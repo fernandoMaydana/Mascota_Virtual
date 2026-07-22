@@ -106,7 +106,7 @@
 .gift-bow {
   font-size: 2.2rem;
   margin-top: -15px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 .gift-body {
@@ -263,9 +263,9 @@
   padding: 4px 8px;
 }
 
-/* 3. Mascota Centrada Grande (Optimizada para pantalla de teléfono) */
+/* 3. Mascota Centrada Grande (Optimizada para pantalla de teléfono - Flotando libremente) */
 .wireframe-stage {
-  margin: 10px 0;
+  margin: 15px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -275,16 +275,32 @@
 .wireframe-pet-circle {
   width: 240px;
   height: 240px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #FFF8DC 0%, #FFE599 100%);
-  border: 6px solid #FFFFFF;
-  box-shadow: 12px 12px 24px rgba(210, 140, 70, 0.3), -10px -10px 20px rgba(255, 255, 255, 0.95), inset 4px 4px 8px rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .wireframe-pet-circle .pet-gif-render {
-  width: 210px;
-  height: 210px;
+  width: 230px;
+  height: 230px;
+  object-fit: contain;
+  border-radius: 0;
+  /* Sin recorte circular */
+  filter: drop-shadow(10px 10px 14px rgba(74, 58, 70, 0.25));
+  transition: transform 0.2s ease;
 }
+
+.wireframe-pet-circle .pet-gif-render.eating-active {
+  /* Si tu GIF 'purin_comiendo.gif' tiene más espacio en blanco o proporciones distintas, */
+  /* puedes ajustar el valor de scale (ej: scale(1.1) o scale(0.9)) para que calce idéntico. */
+  transform: scale(1.2);
+  object-fit: contain;
+}
+
 
 /* 4. Fila Horizontal de 3 Estadísticas (Mimos | Comida | Energía) */
 .stats-triple-row {
@@ -516,7 +532,7 @@
   font-size: 0.8rem;
   font-weight: 700;
   color: #FF1493;
-  text-shadow: 0 1px 3px rgba(255,255,255,0.9);
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
   z-index: 3;
 }
 
@@ -611,6 +627,7 @@
   display: flex;
   justify-content: center;
   transition: transform 0.2s ease;
+  filter: drop-shadow(10px 10px 14px rgba(74, 58, 70, 0.25));
 }
 
 /* Brown Beret Hat */
@@ -622,7 +639,7 @@
   height: 18px;
   background: #5D3A1A;
   border-radius: 50% 50% 30% 30%;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 /* Ears */
@@ -705,7 +722,8 @@
   transition: all 0.2s ease;
 }
 
-.mood-btn:hover, .mood-btn.selected {
+.mood-btn:hover,
+.mood-btn.selected {
   background: var(--clay-primary);
   color: #FFF;
   border-color: #FFF;
@@ -753,7 +771,7 @@
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.85rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 10;
 }
 
@@ -781,11 +799,27 @@
 }
 
 @keyframes fallDown {
-  0% { top: -30px; }
-  100% { top: 260px; }
+  0% {
+    top: -30px;
+  }
+
+  100% {
+    top: 260px;
+  }
 }
 
-.margin-top { margin-top: 16px; }
-.margin-top-sm { margin-top: 10px; }
-.full-width { width: 100%; }
-.text-center { text-align: center; }
+.margin-top {
+  margin-top: 16px;
+}
+
+.margin-top-sm {
+  margin-top: 10px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
