@@ -187,30 +187,8 @@
           </div>
         </header>
 
-        <!-- 2. NOMBRE DE LA MASCOTA CENTRADO LIMPIO EN GRANDE (SIN BOTÓN, SIN EMOJIS, SIN LÁPIZ) -->
-        <div class="clean-pet-name-container">
-          <h1 id="dash-pet-name" class="clean-pet-title-top">Pompom</h1>
-        </div>
-
-        <!-- 3. ÁREA CENTRADA DE LA MASCOTA -->
-        <div class="pet-stage-container wireframe-stage">
-          <!-- Bocadillo de Diálogo Dinámico (Oculto por defecto, aparece solo al tocar) -->
-          <div id="pet-dialog" class="speech-bubble clay-bubble pet-bubble hidden">
-            ¡Hola! 💕
-          </div>
-
-          <!-- Mascota Interactiva Grande Centrada (Flotante sin tarjeta circular) -->
-          <div id="pet-interactive-avatar" class="pet-interactive wireframe-pet-circle">
-            <img src="assets/purin_saludando.gif" id="dash-purin-gif" alt="Pompompurin Interactive" class="pet-gif-render" onerror="this.style.display='none'; document.getElementById('pet-sprite').style.display='flex';">
-            <div id="pet-sprite" class="pompompurin-avatar happy-idle" style="display:none;"></div>
-          </div>
-
-          <!-- Partículas flotantes -->
-          <div id="particles-container"></div>
-        </div>
-
-        <!-- 4. TRES BARRAS DE ESTADO EN FILA HORIZONTAL -->
-        <div class="stats-triple-row">
+        <!-- 2. TRES BARRAS DE ESTADO REUBICADAS ARRIBA (Mimos | Comida | Energía) -->
+        <div class="stats-triple-row top-stats-row">
           <div class="mini-stat-clay">
             <div class="mini-stat-header">
               <span>💖 Mimos</span>
@@ -240,6 +218,28 @@
               <div id="bar-energia" class="clay-progress-fill fill-energia" style="width: 90%;"></div>
             </div>
           </div>
+        </div>
+
+        <!-- 3. ÁREA CENTRADA DE LA MASCOTA (MAXIMIZADA AL ESPACIO DISPONIBLE) -->
+        <div class="pet-stage-container wireframe-stage flexible-pet-stage">
+          <!-- Bocadillo de Diálogo Dinámico (Oculto por defecto) -->
+          <div id="pet-dialog" class="speech-bubble clay-bubble pet-bubble hidden">
+            ¡Hola! 💕
+          </div>
+
+          <!-- Mascota Interactiva Grande Centrada -->
+          <div id="pet-interactive-avatar" class="pet-interactive wireframe-pet-circle flexible-pet-circle">
+            <img src="assets/purin_saludando.gif" id="dash-purin-gif" alt="Pompompurin Interactive" class="pet-gif-render" onerror="this.style.display='none'; document.getElementById('pet-sprite').style.display='flex';">
+            <div id="pet-sprite" class="pompompurin-avatar happy-idle" style="display:none;"></div>
+          </div>
+
+          <!-- Partículas flotantes -->
+          <div id="particles-container"></div>
+        </div>
+
+        <!-- 4. NOMBRE DE LA MASCOTA UBICADO DEBAJO DE LA MASCOTA -->
+        <div class="clean-pet-name-container bottom-name-container">
+          <h1 id="dash-pet-name" class="clean-pet-title-top">Pompom</h1>
         </div>
 
       </div>

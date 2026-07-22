@@ -232,38 +232,56 @@
   line-height: 1;
 }
 
-/* 2. Nombre Centrado Grande y Limpio (Agrandado para celular) */
-.clean-pet-name-container {
+/* 2. Fila Horizontal de 3 Estadísticas REUBICADAS EN LA PARTE SUPERIOR */
+.stats-triple-row.top-stats-row {
   width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin: 10px 0 4px 0;
+}
+
+.mini-stat-clay {
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: var(--radius-md);
+  padding: 8px 6px;
+  box-shadow: var(--clay-shadow-outer-sm);
+  border: 2px solid rgba(255, 255, 255, 0.95);
   text-align: center;
-  margin: 8px 0 -2px 0;
 }
 
-.clean-pet-title-top {
-  font-size: 2.7rem;
+.mini-stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
   font-weight: 700;
+  margin-bottom: 4px;
   color: var(--text-main);
-  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.9);
-  letter-spacing: 0.5px;
-  margin: 0;
 }
 
-/* 3. Mascota Centrada (Resolución y Proporción Real del GIF sin distorsión) */
-.wireframe-stage {
-  margin: 6px 0;
+.mini-track {
+  height: 10px;
+  padding: 1px;
+}
+
+/* 3. Área de la Mascota (Maximizada para ocupar todo el viewport del centro) */
+.wireframe-stage.flexible-pet-stage {
+  margin: 4px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   justify-content: center;
   flex: 1;
+  min-height: 280px;
 }
 
-.wireframe-pet-circle {
+.wireframe-pet-circle.flexible-pet-circle {
   width: 100%;
-  max-width: 380px;
-  height: auto;
-  min-height: 260px;
+  max-width: 440px;
+  height: 100%;
+  max-height: 420px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -277,11 +295,11 @@
   width: auto;
   max-width: 100%;
   height: auto;
-  max-height: 380px;
+  max-height: 420px;
   object-fit: contain;
-  mix-blend-mode: multiply; /* Meclado multiplicativo: elimina automáticamente el cuadro rosa del GIF */
+  mix-blend-mode: multiply; /* Meclado multiplicativo: disuelve el fondo cuadrado si el GIF no es transparente */
   border-radius: 0;
-  filter: drop-shadow(8px 12px 18px rgba(74, 58, 70, 0.24));
+  filter: drop-shadow(8px 14px 20px rgba(74, 58, 70, 0.25));
   transition: transform 0.2s ease;
 }
 
@@ -290,38 +308,20 @@
   object-fit: contain;
 }
 
-
-/* 4. Fila Horizontal de 3 Estadísticas (Agrandadas para lectura fácil) */
-.stats-triple-row {
+/* 4. Nombre Centrado Ubicado DEBAJO de la Mascota */
+.clean-pet-name-container.bottom-name-container {
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-  margin: 6px 0;
-}
-
-.mini-stat-clay {
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: var(--radius-md);
-  padding: 10px 8px;
-  box-shadow: var(--clay-shadow-outer-sm);
-  border: 2px solid rgba(255, 255, 255, 0.9);
   text-align: center;
+  margin: 4px 0 8px 0;
 }
 
-.mini-stat-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.92rem;
+.clean-pet-title-top {
+  font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 6px;
   color: var(--text-main);
-}
-
-.mini-track {
-  height: 12px;
-  padding: 1px;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.5px;
+  margin: 0;
 }
 
 /* 5. Botón Inferior Grande (Tareas del día) */
