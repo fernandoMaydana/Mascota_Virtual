@@ -187,10 +187,10 @@
           </div>
         </header>
 
-        <!-- 2. TRES MEDIDORES CIRCULARES SUPERIORES (Mimos 💖 | Comida 🍮 | Energía ⚡) -->
+        <!-- 2. TRES MEDIDORES CIRCULARES SUPERIORES (Ánimo 💖 | Hambre 🍰 | Energía ⚡) -->
         <div class="stats-triple-row top-circular-stats-row">
           
-          <!-- Mimos 💖 -->
+          <!-- Ánimo 💖 -->
           <div class="circle-stat-card">
             <div class="circle-stat-wrapper">
               <svg class="circle-stat-svg" viewBox="0 0 70 70">
@@ -199,17 +199,19 @@
               </svg>
               <div class="circle-emoji-center">💖</div>
             </div>
+            <span class="circle-stat-label">Ánimo</span>
           </div>
 
-          <!-- Comida 🍮 -->
+          <!-- Hambre 🍰 -->
           <div class="circle-stat-card">
             <div class="circle-stat-wrapper">
               <svg class="circle-stat-svg" viewBox="0 0 70 70">
                 <circle class="circle-bg" cx="35" cy="35" r="28" stroke="rgba(255, 200, 87, 0.2)" stroke-width="6" fill="none"/>
                 <circle id="circle-comida" class="circle-progress fill-comida-ring" cx="35" cy="35" r="28" stroke="#FFC857" stroke-width="6" fill="none" stroke-dasharray="176" stroke-dashoffset="52" stroke-linecap="round"/>
               </svg>
-              <div class="circle-emoji-center">🍮</div>
+              <div class="circle-emoji-center">🍰</div>
             </div>
+            <span class="circle-stat-label">Hambre</span>
           </div>
 
           <!-- Energía ⚡ -->
@@ -221,6 +223,7 @@
               </svg>
               <div class="circle-emoji-center">⚡</div>
             </div>
+            <span class="circle-stat-label">Energía</span>
           </div>
 
         </div>
@@ -242,9 +245,13 @@
           <div id="particles-container"></div>
         </div>
 
-        <!-- 4. NOMBRE DE LA MASCOTA UBICADO DEBAJO DE LA MASCOTA -->
+        <!-- 4. NOMBRE DE LA MASCOTA ENMARCADO UBICADO DEBAJO -->
         <div class="clean-pet-name-container bottom-name-container">
-          <h1 id="dash-pet-name" class="clean-pet-title-top">Pompom</h1>
+          <div class="clay-pill framed-pet-name-badge">
+            <span class="badge-star-icon">✨</span>
+            <h1 id="dash-pet-name" class="framed-pet-title">Pompom</h1>
+            <span class="badge-star-icon">✨</span>
+          </div>
         </div>
 
       </div>
@@ -259,7 +266,7 @@
     
     <!-- Izquierda 1: Alimentar -->
     <button id="dock-btn-feed" class="dock-item" title="Alimentar a la mascota">
-      <span class="dock-icon">🍮</span>
+      <span class="dock-icon">🍰</span>
       <span class="dock-label">Alimentar</span>
     </button>
 

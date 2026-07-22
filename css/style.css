@@ -245,15 +245,24 @@
 .circle-stat-card {
   background: rgba(255, 255, 255, 0.95);
   border-radius: var(--radius-lg);
-  padding: 8px;
+  padding: 8px 4px 6px 4px;
   box-shadow: var(--clay-shadow-outer-sm);
   border: 3px solid rgba(255, 255, 255, 0.95);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 90px;
-  aspect-ratio: 1 / 1;
+  max-width: 92px;
+  gap: 4px;
+}
+
+.circle-stat-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-main);
+  text-align: center;
+  line-height: 1;
 }
 
 .circle-stat-wrapper {
@@ -333,20 +342,38 @@
   object-fit: contain;
 }
 
-/* 4. Nombre Centrado Ubicado DEBAJO de la Mascota (Pegado al personaje) */
+/* 4. Nombre Ubicado DEBAJO de la Mascota - Enmarcado en Píldora Claymorphism */
 .clean-pet-name-container.bottom-name-container {
   width: 100%;
-  text-align: center;
-  margin: -6px 0 4px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0 16px 0;
 }
 
-.clean-pet-title-top {
-  font-size: 2.6rem;
+.framed-pet-name-badge {
+  background: rgba(255, 255, 255, 0.95);
+  border: 3px solid var(--clay-primary);
+  border-radius: var(--radius-pill);
+  padding: 6px 24px;
+  box-shadow: var(--clay-shadow-outer-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.framed-pet-title {
+  font-size: 2.1rem;
   font-weight: 700;
   color: var(--text-main);
-  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.9);
-  letter-spacing: 0.5px;
   margin: 0;
+  line-height: 1;
+  letter-spacing: 0.5px;
+}
+
+.badge-star-icon {
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 /* 5. Botón Inferior Grande (Tareas del día) */
