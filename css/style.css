@@ -192,9 +192,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 18px 16px 95px 16px !important;
-  min-height: 88vh;
+  gap: 8px;
+  padding: 16px 16px 80px 16px !important;
+  min-height: 90vh;
   justify-content: space-between;
 }
 
@@ -355,17 +355,18 @@
   transform: scale(1.05);
 }
 
-/* 4. Nombre Ubicado DEBAJO de la Mascota - Enmarcado en Píldora (Casi llegando al Dock inferior) */
+/* 4. Nombre Ubicado DEBAJO de la Mascota - Enmarcado en Píldora (Pegado justo a la altura del Dock) */
 .clean-pet-name-container.bottom-name-container {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 18px 0 28px 0; /* Bajado más cerca del Dock */
+  margin-top: auto !important;
+  margin-bottom: 4px !important; /* Ubicado exactamente a la altura del Dock flotante */
 }
 
 .framed-pet-name-badge {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.96);
   border: 3px solid var(--clay-primary);
   border-radius: var(--radius-pill);
   padding: 6px 24px;
