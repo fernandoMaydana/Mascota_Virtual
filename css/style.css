@@ -168,7 +168,7 @@
   max-height: 100%;
   object-fit: contain;
   object-position: center;
-  border-radius: 50%;
+  border-radius: 0; /* Sin recorte circular */
   pointer-events: none;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
@@ -176,6 +176,7 @@
 .pet-avatar-large .pet-gif-render {
   width: 140px;
   height: 140px;
+  border-radius: 50%;
 }
 
 .pet-interactive .pet-gif-render {
@@ -322,16 +323,16 @@
   box-shadow: none !important;
 }
 
-/* MARCO RETRATO CLAYMORPHISM ENMARCADO CON BORDES REDONDEADOS (32px) */
+/* MARCO RETRATO CLAYMORPHISM ENMARCADO (320px - Recuadro completo sin recorte circular) */
 .pet-portrait-frame {
-  width: 270px;
-  height: 270px;
-  max-width: 78vw;
-  max-height: 78vw;
-  border-radius: 32px;
+  width: 320px;
+  height: 320px;
+  max-width: 88vw;
+  max-height: 88vw;
+  border-radius: 28px;
   overflow: hidden;
   border: 5px solid rgba(255, 255, 255, 0.95);
-  box-shadow: 0 14px 30px rgba(220, 110, 140, 0.3), inset 3px 3px 8px rgba(255, 255, 255, 0.9), inset -3px -3px 8px rgba(180, 70, 100, 0.15);
+  box-shadow: 0 14px 32px rgba(220, 110, 140, 0.32), inset 3px 3px 8px rgba(255, 255, 255, 0.9), inset -3px -3px 8px rgba(180, 70, 100, 0.15);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -342,7 +343,8 @@
 .pet-portrait-frame .pet-gif-render {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Llena el marco redondeado con la imagen/GIF de 480x480 manteniendo su calidad */
+  object-fit: cover; /* Llena el recuadro completo con el GIF de 480x480 */
+  border-radius: 0 !important; /* Mantiene el recuadro cuadrado llenando el marco */
   mix-blend-mode: normal;
   filter: none;
   transform: none;
@@ -353,13 +355,13 @@
   transform: scale(1.05);
 }
 
-/* 4. Nombre Ubicado DEBAJO de la Mascota - Enmarcado en Píldora Claymorphism */
+/* 4. Nombre Ubicado DEBAJO de la Mascota - Enmarcado en Píldora (Casi llegando al Dock inferior) */
 .clean-pet-name-container.bottom-name-container {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px 0 16px 0;
+  margin: 18px 0 28px 0; /* Bajado más cerca del Dock */
 }
 
 .framed-pet-name-badge {
