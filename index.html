@@ -80,42 +80,30 @@
     <section id="screen-reveal" class="screen hidden">
       <div class="clay-card card-reveal">
         
-        <!-- Cabecera y Avatar de Revelación (Paso 1) -->
-        <div id="reveal-top-header">
-          <div class="reveal-header">
-            <span class="badge-tag">🍮 ¡Tu nuevo compañero!</span>
-            <h2 class="clay-title">¡Conoce a tu Mascota!</h2>
+        <!-- Formulario e Información de Revelación (Paso 1 Limpio sin GIF ni ejemplos) -->
+        <div id="name-step-1" class="clean-reveal-step">
+          <div id="reveal-top-header" class="reveal-header text-center">
+            <span class="badge-tag">¡Tu nuevo compañero!</span>
+            <h2 class="clay-title margin-top-xs">Conoce a tu Mascota</h2>
           </div>
 
-          <!-- Avatar de Pompompurin / GIF Saludando -->
-          <div class="pet-reveal-container">
-            <div class="speech-bubble clay-bubble">
-              ¡Hola! Tengo muchas ganas de ser tu mejor amigo 💛
-            </div>
-            <div class="pet-avatar-large clay-pet-shadow" id="pet-reveal-avatar">
-              <img src="assets/purin_saludando.gif" id="purin-gif-img" alt="Pompompurin Saludando" class="pet-gif-render" onerror="this.style.display='none'; document.getElementById('purin-svg-fallback').style.display='flex';">
-              <div id="purin-svg-fallback" class="pompompurin-avatar greeting-state" style="display:none;"></div>
-            </div>
+          <div class="name-form clay-inset-box margin-top">
+            <label for="pet-name-input" class="input-label">
+              Ponle un nombre a tu nuevo compañero:
+            </label>
+            <input type="text" id="pet-name-input" class="clay-input" placeholder="Escribe el nombre aquí..." maxlength="15" autocomplete="off">
+            <button id="btn-save-name" class="clay-btn btn-accent margin-top-sm">
+              Guardar nombre
+            </button>
           </div>
         </div>
 
-        <!-- Formulario de Nombre (Paso 1) -->
-        <div id="name-step-1" class="name-form clay-inset-box">
-          <label for="pet-name-input" class="input-label">
-            ✨ Ponle un nombre especial a tu compañero:
-          </label>
-          <input type="text" id="pet-name-input" class="clay-input" placeholder="Ej: Pompom, Pudín, Mochito..." maxlength="15" autocomplete="off">
-          <button id="btn-save-name" class="clay-btn btn-accent margin-top-sm">
-            Guardar nombre ✨
-          </button>
-        </div>
-
-        <!-- PASO 2: ¿Por qué ese nombre? -->
-        <div id="name-step-2" class="name-reason-clean hidden">
+        <!-- PASO 2: ¿Por qué ese nombre? (Centrado Limpio) -->
+        <div id="name-step-2" class="name-reason-clean centered-reason-container hidden">
           <h2 class="clay-title center big-reason-title">¿Por qué ese nombre?</h2>
           
-          <div class="clay-inset-box margin-top">
-            <textarea id="pet-name-reason-input" class="clay-textarea" placeholder="Escribe el por qué o tu chiste interno aquí... 🤭" rows="4"></textarea>
+          <div class="clay-inset-box margin-top full-width">
+            <textarea id="pet-name-reason-input" class="clay-textarea" placeholder="Escribe aquí" rows="4"></textarea>
           </div>
 
           <button id="btn-save-reason" class="clay-btn btn-primary margin-top full-width">
@@ -175,15 +163,27 @@
     <section id="screen-dashboard" class="screen hidden">
       <div class="clay-card dashboard-main-card">
         
-        <!-- 1. HEADER SUPERIOR (Nombre dueña | Progreso) -->
+        <!-- 1. HEADER SUPERIOR (Nombre dueña | Progreso | Ajustes ⚙️) -->
         <header class="dashboard-header-wireframe">
           <div class="header-pill clay-pill owner-pill">
             <span class="owner-icon">🌸</span>
             <span id="dash-owner-name" class="owner-name-text">Tu Regalo</span>
           </div>
 
-          <div class="header-pill clay-pill progress-pill">
-            <span id="dash-day-badge" class="progress-text">Día 1 / 5 🌸</span>
+          <div class="header-right-group">
+            <div class="header-pill clay-pill progress-pill">
+              <span id="dash-day-badge" class="progress-text">Día 1 / 5 🌸</span>
+            </div>
+
+            <!-- Control de Música de Fondo 🎵 / 🔇 -->
+            <button id="btn-top-music" class="header-pill clay-pill settings-top-btn" title="Música de Fondo">
+              <span id="music-top-icon" class="settings-top-icon">🎵</span>
+            </button>
+
+            <!-- Ajustes ⚙️ Reubicado al lado de los Días -->
+            <button id="btn-top-settings" class="header-pill clay-pill settings-top-btn" title="Ajustes y Días">
+              <span class="settings-top-icon">⚙️</span>
+            </button>
           </div>
         </header>
 
@@ -195,7 +195,7 @@
             <div class="circle-stat-wrapper">
               <svg class="circle-stat-svg" viewBox="0 0 70 70">
                 <circle class="circle-bg" cx="35" cy="35" r="28" stroke="rgba(255, 117, 143, 0.2)" stroke-width="6" fill="none"/>
-                <circle id="circle-mimos" class="circle-progress fill-mimos-ring" cx="35" cy="35" r="28" stroke="#FF758F" stroke-width="6" fill="none" stroke-dasharray="176" stroke-dashoffset="35" stroke-linecap="round"/>
+                <circle id="circle-mimos" class="circle-progress fill-mimos-ring" cx="35" cy="35" r="28" stroke="#FF758F" stroke-width="6" fill="none" stroke-dasharray="176" stroke-dashoffset="132" stroke-linecap="round"/>
               </svg>
               <div class="circle-emoji-center">💖</div>
             </div>
@@ -207,7 +207,7 @@
             <div class="circle-stat-wrapper">
               <svg class="circle-stat-svg" viewBox="0 0 70 70">
                 <circle class="circle-bg" cx="35" cy="35" r="28" stroke="rgba(255, 200, 87, 0.2)" stroke-width="6" fill="none"/>
-                <circle id="circle-comida" class="circle-progress fill-comida-ring" cx="35" cy="35" r="28" stroke="#FFC857" stroke-width="6" fill="none" stroke-dasharray="176" stroke-dashoffset="52" stroke-linecap="round"/>
+                <circle id="circle-comida" class="circle-progress fill-comida-ring" cx="35" cy="35" r="28" stroke="#FFC857" stroke-width="6" fill="none" stroke-dasharray="176" stroke-dashoffset="123" stroke-linecap="round"/>
               </svg>
               <div class="circle-emoji-center">🍰</div>
             </div>
@@ -219,7 +219,7 @@
             <div class="circle-stat-wrapper">
               <svg class="circle-stat-svg" viewBox="0 0 70 70">
                 <circle class="circle-bg" cx="35" cy="35" r="28" stroke="rgba(112, 228, 239, 0.2)" stroke-width="6" fill="none"/>
-                <circle id="circle-energia" class="circle-progress fill-energia-ring" cx="35" cy="35" r="28" stroke="#70E4EF" stroke-width="6" fill="none" stroke-dasharray="176" stroke-dashoffset="17" stroke-linecap="round"/>
+                <circle id="circle-energia" class="circle-progress fill-energia-ring" cx="35" cy="35" r="28" stroke="#70E4EF" stroke-width="6" fill="none" stroke-dasharray="176" stroke-dashoffset="140" stroke-linecap="round"/>
               </svg>
               <div class="circle-emoji-center">⚡</div>
             </div>
@@ -261,10 +261,8 @@
 
   </div>
 
-  <!-- ===================================================
-       BARRA DE NAVEGACIÓN FLOTANTE CLAYMORPHISM (DOCK MÓVIL)
-       =================================================== -->
-  <nav class="clay-bottom-dock">
+  <!-- BARRA DE NAVEGACIÓN FLOTANTE CLAYMORPHISM (DOCK MÓVIL - Oculto por defecto en bienvenida) -->
+  <nav class="clay-bottom-dock hidden">
     
     <!-- Izquierda 1: Alimentar -->
     <button id="dock-btn-feed" class="dock-item" title="Alimentar a la mascota">
@@ -290,18 +288,20 @@
       <span class="dock-label">Jugar</span>
     </button>
 
-    <!-- Derecha 2: Ajustes -->
-    <button id="dock-btn-settings" class="dock-item" title="Ajustes">
-      <span class="dock-icon">⚙️</span>
-      <span class="dock-label">Ajustes</span>
+    <!-- Derecha 2: Bailar -->
+    <button id="dock-btn-dance" class="dock-item" title="¡A bailar con la mascota!">
+      <span class="dock-icon">💃</span>
+      <span class="dock-label">Bailar</span>
     </button>
 
   </nav>
 
-  <!-- OVERLAY DE MODO NOCHE (DORMIR) -->
-  <div id="night-sleep-overlay" class="night-sleep-overlay pointer-events-none">
+  <!-- OVERLAY DE MODO NOCHE (SIESTA ININTERRUMPIDA SIN BOTÓN DESPERTAR) -->
+  <div id="night-sleep-overlay" class="night-sleep-overlay">
     <div class="night-stars">🌙✨⭐💤</div>
-    <div class="night-text">Pompompurin está durmiendo plácidamente... 😴 Zzz...</div>
+    <div id="night-status-text" class="night-text">Poncho está durmiendo su siesta reparadora... 😴 Zzz...</div>
+    <div id="night-timer-text" class="night-subtext">Tiempo restante: 10:00</div>
+    <div class="night-hint-text">El descanso es ininterrumpido hasta que suene el despertador ⏰</div>
   </div>
 
 
@@ -643,19 +643,87 @@
     </div>
   </div>
 
-  <!-- Modal Minijuego Atrapa Pudines (Día 2 Tarea 3) -->
+  <!-- Modal Hub de Minijuegos (3 Juegos Interactivos 🎮) -->
   <div id="modal-minigame" class="modal-overlay hidden">
-    <div class="clay-card modal-content text-center">
+    <div class="clay-card modal-content text-center minigame-hub-modal">
       <button class="modal-close-btn" data-close="modal-minigame">&times;</button>
-      <h3 class="clay-title">🎮 Atrapa los Pudines</h3>
-      <p class="modal-subtitle">¡Mueve la canastita para atrapar 5 pudines!</p>
-      <div id="minigame-canvas-container" class="minigame-container clay-inset-box">
-        <div id="game-score-badge" class="game-score">Puntos: <span id="game-score-val">0</span> / 5</div>
-        <div id="minigame-area" class="minigame-area">
-          <div id="basket-player" class="basket-player">🧺</div>
+      
+      <!-- VISTA 1: MENÚ SELECTOR DE 3 JUEGOS -->
+      <div id="minigame-hub-view">
+        <h3 class="clay-title">🎮 Zona de Juegos de Poncho</h3>
+        <p class="modal-subtitle">¡Selecciona tu juego favorito y diviértete con Poncho!</p>
+
+        <div class="games-grid margin-top-sm">
+          <!-- Juego 1: Poncho Runner -->
+          <div class="game-card clay-inset-box">
+            <div class="game-card-icon">🏃</div>
+            <h4 class="game-card-title">Poncho Runner</h4>
+            <p class="game-card-desc">Salta charcos 🌧️ y atrapa pudines 🍮 con la barra espaciadora o toques.</p>
+            <button id="btn-launch-runner" class="clay-btn btn-primary full-width margin-top-xs">¡Jugar Runner! 🏃</button>
+          </div>
+
+          <!-- Juego 2: Memoria de Pudines -->
+          <div class="game-card clay-inset-box">
+            <div class="game-card-icon">🧠</div>
+            <h4 class="game-card-title">Memoria de Pudines</h4>
+            <p class="game-card-desc">Voltea las tarjetas de 4x3 y encuentra los 6 pares de Poncho. 🌸</p>
+            <button id="btn-launch-memory" class="clay-btn btn-accent full-width margin-top-xs">¡Jugar Memoria! 🧠</button>
+          </div>
+
+          <!-- Juego 3: Pop-Pop Pudín -->
+          <div class="game-card clay-inset-box">
+            <div class="game-card-icon">🎈</div>
+            <h4 class="game-card-title">Pop-Pop Pudín</h4>
+            <p class="game-card-desc">Explota la mayor cantidad de burbujas flotantes en 20 segundos. ⏱️</p>
+            <button id="btn-launch-bubbles" class="clay-btn btn-primary full-width margin-top-xs">¡Explotar Burbujas! 🎈</button>
+          </div>
         </div>
-        <button id="btn-start-minigame" class="clay-btn btn-primary">¡Empezar Juego! 🚀</button>
       </div>
+
+      <!-- VISTA 2: CONTENEDOR DEL JUEGO ACTIVO -->
+      <div id="minigame-viewport-view" class="hidden">
+        <div class="game-top-bar">
+          <button id="btn-back-to-hub" class="clay-btn-sm btn-ghost">↩️ Volver a Juegos</button>
+          <span id="active-game-title" class="active-game-badge">Juego Activo</span>
+        </div>
+
+        <!-- ESCENARIO 1: PONCHO RUNNER -->
+        <div id="stage-runner" class="game-stage hidden">
+          <div class="game-instructions-box">
+            "¡Poncho salió a pasear! Presiona la pantalla o la barra espaciadora para hacerlo saltar. Esquiva los charquitos de agua y atrapa los pudines para sumar puntos."
+          </div>
+          <div id="runner-score-badge" class="score-pill">Puntos: <span id="runner-score-val">0</span></div>
+          <div id="runner-arena" class="runner-arena">
+            <div id="runner-poncho" class="runner-player">🐶</div>
+            <div id="runner-floor" class="runner-floor"></div>
+          </div>
+          <button id="btn-start-runner" class="clay-btn btn-primary margin-top-xs">¡Iniciar Carrera! 🚀</button>
+        </div>
+
+        <!-- ESCENARIO 2: MEMORIA DE PUDINES -->
+        <div id="stage-memory" class="game-stage hidden">
+          <div class="game-instructions-box">
+            "¿Dónde quedó el pudín? Toca las tarjetas para voltearlas y encuentra todos los pares de Poncho."
+          </div>
+          <div id="memory-score-badge" class="score-pill">Pares: <span id="memory-pairs-val">0</span> / 6</div>
+          <div id="memory-grid" class="memory-grid margin-top-xs"></div>
+          <button id="btn-start-memory" class="clay-btn btn-accent margin-top-xs">¡Mezclar e Iniciar! 🧠</button>
+        </div>
+
+        <!-- ESCENARIO 3: POP-POP PUDÍN -->
+        <div id="stage-bubbles" class="game-stage hidden">
+          <div class="game-instructions-box">
+            "¡Explotar burbujas es súper relajante! Toca todas las burbujas flotantes que puedas antes de que se acabe el tiempo."
+          </div>
+          <div class="game-stats-row">
+            <span id="bubbles-score-badge" class="score-pill">Puntos: <span id="bubbles-score-val">0</span></span>
+            <span id="bubbles-timer-badge" class="score-pill timer-pill">Tiempo: <span id="bubbles-timer-val">20</span>s</span>
+          </div>
+          <div id="bubbles-arena" class="bubbles-arena margin-top-xs"></div>
+          <button id="btn-start-bubbles-game" class="clay-btn btn-primary margin-top-xs">¡Explotar Burbujas! 🎈</button>
+        </div>
+      </div>
+
     </div>
   </div>
 

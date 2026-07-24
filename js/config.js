@@ -19,9 +19,9 @@ const APP_CONFIG = {
     currentDay: 1,           // 1 a 5
     unlockedDay: 1,          // Día máximo alcanzado
     stats: {
-      mimos: 80,
-      comida: 70,
-      energia: 90
+      mimos: 25,     // Inicia en 25% (Ánimo bajo para enseñar a mimar)
+      comida: 30,    // Inicia en 30% (Hambre baja para enseñar a alimentar)
+      energia: 20    // Inicia en 20% (Energía baja para enseñar a dar la siesta)
     },
     // DÍA 1 (4 Tareas)
     day1: {

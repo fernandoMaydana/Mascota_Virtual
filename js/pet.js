@@ -93,13 +93,25 @@ class PetController {
       }
 
       if (this.mimoTapCount >= this.mimoTarget) {
+        this.mimoTapCount = 0; // Resetear contador para permitir nuevos bloques de 5 toques
+
         if (window.confetti) {
           window.confetti({ particleCount: 75, spread: 60, origin: { y: 0.6 } });
         }
-        if (window.tasksController) {
-          window.tasksController.completeSpecificTask('day1', 'mimoDone');
+
+        // Aumentar Ánimo (mimos) un +15% hasta llegar al 100%
+        if (window.app && window.app.state && window.app.state.stats) {
+          const currentMimos = window.app.state.stats.mimos || 25;
+          window.app.state.stats.mimos = Math.min(100, currentMimos + 15);
+          window.storageManager.saveState(window.app.state);
+
+          if (window.tasksController) {
+            window.tasksController.updateStatsUI(window.app.state.stats);
+            window.tasksController.completeSpecificTask('day1', 'mimoDone');
+          }
         }
-        if (statusText) statusText.textContent = '¡Mimos completados! 💕';
+
+        if (statusText) statusText.textContent = '¡Ánimo aumentado +15%! 💕';
       }
 
       setTimeout(() => this.setExpression('happy'), 1000);

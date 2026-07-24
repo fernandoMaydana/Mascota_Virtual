@@ -3,27 +3,27 @@
    =================================================== */
 
 :root {
-  /* Color Palette - Default Day 1 (Cotton Candy Pink) */
-  --bg-gradient-start: #FFEBF0;
-  --bg-gradient-end: #FFF5EC;
-  --text-main: #4A3A46;
-  --text-muted: #8C7083;
+  /* Color Palette - Turquesa / Azul Pastel (Coincidente con el fondo del GIF #489BA9) */
+  --bg-gradient-start: #E2F5F8;
+  --bg-gradient-end: #CBEBF1;
+  --text-main: #1D3F47;
+  --text-muted: #436F7A;
 
   /* Clay Tokens */
-  --clay-primary: #FF8DA1;
-  --clay-primary-hover: #FF758F;
-  --clay-secondary: #FFC2D1;
+  --clay-primary: #489BA9;
+  --clay-primary-hover: #37828F;
+  --clay-secondary: #84D0DD;
   --clay-accent: #FFC857;
   --clay-accent-hover: #FFB733;
-  --clay-card-bg: #FFE5EC;
-  --clay-inset-bg: #F9D8E2;
+  --clay-card-bg: rgba(255, 255, 255, 0.95); /* Color exacto del fondo del GIF */
+  --clay-inset-bg: #E1F3F6;
   --clay-white: #FFFFFF;
 
   /* Shadows for Clay Effect */
-  --clay-shadow-outer: 12px 12px 24px rgba(220, 120, 150, 0.28), -8px -8px 20px rgba(255, 255, 255, 0.9);
-  --clay-shadow-outer-sm: 6px 6px 14px rgba(220, 120, 150, 0.22), -4px -4px 10px rgba(255, 255, 255, 0.85);
-  --clay-shadow-inset: inset 4px 4px 8px rgba(255, 255, 255, 0.7), inset -4px -4px 8px rgba(190, 80, 110, 0.15);
-  --clay-btn-shadow: 8px 8px 16px rgba(240, 110, 140, 0.35), -6px -6px 12px rgba(255, 255, 255, 0.95), inset 3px 3px 6px rgba(255, 255, 255, 0.8), inset -3px -3px 6px rgba(180, 60, 90, 0.2);
+  --clay-shadow-outer: 12px 12px 24px rgba(45, 105, 115, 0.28), -8px -8px 20px rgba(255, 255, 255, 0.9);
+  --clay-shadow-outer-sm: 6px 6px 14px rgba(45, 105, 115, 0.22), -4px -4px 10px rgba(255, 255, 255, 0.85);
+  --clay-shadow-inset: inset 4px 4px 8px rgba(255, 255, 255, 0.5), inset -4px -4px 8px rgba(20, 60, 70, 0.2);
+  --clay-btn-shadow: 8px 8px 16px rgba(35, 90, 100, 0.35), -6px -6px 12px rgba(255, 255, 255, 0.95), inset 3px 3px 6px rgba(255, 255, 255, 0.7), inset -3px -3px 6px rgba(20, 60, 70, 0.25);
 
   /* Radius */
   --radius-xl: 32px;
@@ -36,16 +36,16 @@
    TEMAS DE COLORES DINÁMICOS POR DÍA
    =================================================== */
 
-/* DÍA 1: Rosa Algodón de Azúcar */
+/* DÍA 1: Turquesa Azul Pastel (Fondo GIF #489BA9) */
 body.theme-day-1 {
-  --bg-gradient-start: #FFEBF0;
-  --bg-gradient-end: #FFF5EC;
-  --clay-primary: #FF8DA1;
-  --clay-primary-hover: #FF758F;
-  --clay-secondary: #FFC2D1;
-  --clay-card-bg: #FFE5EC;
-  --clay-inset-bg: #F9D8E2;
-  --clay-shadow-outer: 12px 12px 24px rgba(220, 120, 150, 0.28), -8px -8px 20px rgba(255, 255, 255, 0.9);
+  --bg-gradient-start: #E2F5F8;
+  --bg-gradient-end: #CBEBF1;
+  --clay-primary: #489BA9;
+  --clay-primary-hover: #37828F;
+  --clay-secondary: #84D0DD;
+  --clay-card-bg: rgba(255, 255, 255, 0.95);
+  --clay-inset-bg: #E1F3F6;
+  --clay-shadow-outer: 12px 12px 24px rgba(45, 105, 115, 0.28), -8px -8px 20px rgba(255, 255, 255, 0.9);
 }
 
 /* DÍA 2: Amarillo Pudín Miel */

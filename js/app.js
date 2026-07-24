@@ -20,6 +20,16 @@ class App {
     // Sincronizar nombre de mascota y dueña en todos los textos
     this.updatePetNamePlaceholders();
 
+    // Inicializar música de fondo con auto-inicio y control inteligente
+    this.initBackgroundMusic();
+
+    // Limpiar estado de sueño viejo de testing si supera 60s
+    if (this.state.sleepState && this.state.sleepState.totalDurationSec > 60) {
+      this.state.sleepState.isSleeping = false;
+      this.state.sleepState.totalDurationSec = 10;
+      window.storageManager.saveState(this.state);
+    }
+
     // Determinar pantalla de inicio según progreso guardado
     let targetScreen = this.state.screen || 'gift';
     if (targetScreen === 'gift' && this.state.petName && this.state.petName !== 'Pompom') {
@@ -36,7 +46,7 @@ class App {
     this.renderCurrentDayView();
   }
 
-  // Cambiar pantalla con animación suave
+  // Cambiar pantalla con animación suave y reseteo de pasos
   switchScreen(screenId) {
     const current = document.querySelector('.screen.active');
     const target = document.getElementById(`screen-${screenId}`);
@@ -48,9 +58,27 @@ class App {
       current.classList.add('hidden');
     }
 
+    // Reseteo de visibilidad de pasos internos para la pantalla de revelación de nombre
+    if (screenId === 'reveal') {
+      const nameStep1 = document.getElementById('name-step-1');
+      const nameStep2 = document.getElementById('name-step-2');
+      if (nameStep1) nameStep1.classList.remove('hidden');
+      if (nameStep2) nameStep2.classList.add('hidden');
+    }
+
     target.classList.remove('hidden');
     void target.offsetWidth; // Force reflow
     target.classList.add('active');
+
+    // Control de visibilidad del Dock Flotante Inferior (Solo visible en Dashboard)
+    const dockNav = document.querySelector('.clay-bottom-dock');
+    if (dockNav) {
+      if (screenId === 'dashboard') {
+        dockNav.classList.remove('hidden');
+      } else {
+        dockNav.classList.add('hidden');
+      }
+    }
 
     this.activeScreen = screenId;
     this.state.screen = screenId;
@@ -215,29 +243,38 @@ class App {
     const oldBtnFeed = document.getElementById('btn-quick-feed-pet');
     const dashPurinGif = document.getElementById('dash-purin-gif');
 
+    const foodItems = [
+      { name: 'Pastel 🍰', gif: 'assets/feed/feed_pastel.gif', fallbackGif: 'assets/purin_comiendo.gif', quote: '¡Mmmm pastel delicioso! 🍰✨', particle: '🍰' },
+      { name: 'Pizza 🍕', gif: 'assets/feed/feed_pizza.gif', fallbackGif: 'assets/purin_comiendo.gif', quote: '¡Qué pizza tan sabrosa! 🍕✨', particle: '🍕' },
+      { name: 'Agua 💧', gif: 'assets/feed/feed_agua.gif', fallbackGif: 'assets/purin_comiendo.gif', quote: '¡Refrescante agüita pura! 💧✨', particle: '💧' }
+    ];
+
     const handleFeedAction = (e) => {
+      const selectedFood = foodItems[Math.floor(Math.random() * foodItems.length)];
+      
       if (dashPurinGif) {
-        dashPurinGif.src = 'assets/purin_comiendo.gif';
+        dashPurinGif.src = selectedFood.gif;
+        dashPurinGif.onerror = () => { dashPurinGif.src = selectedFood.fallbackGif; };
         dashPurinGif.classList.add('eating-active');
       }
       if (window.petController) {
         window.petController.setExpression('eating');
-        window.petController.sayQuote('¡Mmmm! ¡Qué pudín tan delicioso! ¡Muchas gracias! 🍮✨');
+        window.petController.sayQuote(selectedFood.quote);
         if (e && e.clientX) window.petController.spawnFloatingParticle(e.clientX, e.clientY);
       }
 
-      this.state.stats.comida = Math.min(100, this.state.stats.comida + 15);
+      this.state.stats.comida = Math.min(100, (this.state.stats.comida || 30) + 15);
       window.storageManager.saveState(this.state);
-      if (window.tasksController) window.tasksController.updateTasksUI(this.state);
+      if (window.tasksController) window.tasksController.updateStatsUI(this.state.stats);
 
-      setTimeout(() => {
+      if (this.feedTimer) clearTimeout(this.feedTimer);
+      this.feedTimer = setTimeout(() => {
         if (dashPurinGif) {
           dashPurinGif.src = 'assets/purin_saludando.gif';
           dashPurinGif.classList.remove('eating-active');
         }
         if (window.petController) {
           window.petController.setExpression('happy');
-          window.petController.sayQuote('¡Hazme clic o mantenme presionado para mimarme! 💕');
         }
       }, 10000);
     };
@@ -245,56 +282,263 @@ class App {
     if (dockFeed) dockFeed.addEventListener('click', handleFeedAction);
     if (oldBtnFeed) oldBtnFeed.addEventListener('click', handleFeedAction);
 
-    // 3. DOCK - DORMIR / MODO NOCHE (IZQUIERDA 2)
+    // 3. DOCK - DORMIR / SIESTA ININTERRUMPIDA (10 MIN / 30 MIN)
     const dockSleep = document.getElementById('dock-btn-sleep');
     const sleepOverlay = document.getElementById('night-sleep-overlay');
+    const nightTimerText = document.getElementById('night-timer-text');
+    const dockNav = document.querySelector('.clay-bottom-dock');
 
-    if (dockSleep) {
-      dockSleep.addEventListener('click', () => {
-        if (sleepOverlay) sleepOverlay.classList.add('active');
-        if (window.petController) {
-          window.petController.setExpression('happy');
-          window.petController.sayQuote('😴 Zzz... ¡Buenas noches! Tomando una siestita reparadora... ✨');
-        }
+    const updateTimerText = (remainingSec) => {
+      if (!nightTimerText) return;
+      const m = Math.floor(remainingSec / 60).toString().padStart(2, '0');
+      const s = (remainingSec % 60).toString().padStart(2, '0');
+      nightTimerText.textContent = `⏱️ Tiempo restante: ${m}:${s}`;
+    };
 
-        this.state.stats.energia = Math.min(100, this.state.stats.energia + 25);
-        window.storageManager.saveState(this.state);
-        if (window.tasksController) window.tasksController.updateTasksUI(this.state);
+    const wakeUp = () => {
+      if (this.sleepTimerInterval) clearInterval(this.sleepTimerInterval);
 
-        setTimeout(() => {
-          if (sleepOverlay) sleepOverlay.classList.remove('active');
-          if (window.petController) {
-            window.petController.sayQuote('¡Desperté lleno de energía y listo para jugar contigo! 🌟');
-          }
-        }, 5000);
-      });
-    }
+      // Al sonar el despertador (00:00), recargar energía al 100%
+      this.state.stats.energia = 100;
+      if (this.state.sleepState) {
+        this.state.sleepState.isSleeping = false;
+      }
+      window.storageManager.saveState(this.state);
 
-    // 4. DOCK - JUGAR (DERECHA 1)
+      if (sleepOverlay) sleepOverlay.classList.remove('active');
+      if (dashPurinGif) dashPurinGif.src = 'assets/purin_saludando.gif';
+      
+      // Volver a mostrar el Dock flotante en el Dashboard
+      if (dockNav && this.activeScreen === 'dashboard') {
+        dockNav.classList.remove('hidden');
+      }
+
+      if (window.confetti) {
+        window.confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+      }
+      if (window.tasksController) window.tasksController.updateTasksUI(this.state);
+      if (window.petController) {
+        window.petController.sayQuote('¡Desperté renovado y con 100% de energía! 🌟');
+      }
+
+      // Reanudar música de fondo al despertar de la siesta
+      this.resumeBackgroundMusic();
+    };
+
+    const tickSleep = () => {
+      if (!this.state.sleepState || !this.state.sleepState.isSleeping) return;
+      const elapsedSec = Math.floor((Date.now() - this.state.sleepState.startTime) / 1000);
+      const totalSec = this.state.sleepState.totalDurationSec || 10; // 10 segundos en testing
+      const remainingSec = Math.max(0, totalSec - elapsedSec);
+
+      updateTimerText(remainingSec);
+
+      if (remainingSec <= 0) {
+        wakeUp();
+      }
+    };
+
+    const startSleeping = () => {
+      // MODO PRUEBA / TESTING: 10 SEGUNDOS DE SIESTA
+      const sleepSeconds = 10;
+
+      // Pausar música de fondo durante la siesta
+      this.pauseBackgroundMusic();
+
+      this.state.sleepState = {
+        isSleeping: true,
+        startTime: Date.now(),
+        totalDurationSec: sleepSeconds,
+        initialEnergy: this.state.stats.energia || 20
+      };
+      window.storageManager.saveState(this.state);
+
+      // Ocultar Dock flotante durante la siesta para despejar la pantalla
+      if (dockNav) dockNav.classList.add('hidden');
+
+      // Cambiar a GIF de dormir (assets/purin_durmiendo.gif)
+      if (dashPurinGif) {
+        dashPurinGif.src = 'assets/purin_durmiendo.gif';
+      }
+
+      if (sleepOverlay) sleepOverlay.classList.add('active');
+      updateTimerText(sleepSeconds);
+
+      if (this.sleepTimerInterval) clearInterval(this.sleepTimerInterval);
+      this.sleepTimerInterval = setInterval(tickSleep, 1000);
+    };
+
+    if (dockSleep) dockSleep.addEventListener('click', startSleeping);
+
+    // 4. DOCK - JUGAR (HUB DE 3 MINIJUEGOS)
     const dockPlay = document.getElementById('dock-btn-play');
+    const hubView = document.getElementById('minigame-hub-view');
+    const viewportView = document.getElementById('minigame-viewport-view');
+    const btnBackToHub = document.getElementById('btn-back-to-hub');
+    const activeGameTitle = document.getElementById('active-game-title');
+
+    const showGameHub = () => {
+      if (hubView) hubView.classList.remove('hidden');
+      if (viewportView) viewportView.classList.add('hidden');
+      this.stopActiveMinigames();
+    };
+
+    if (btnBackToHub) btnBackToHub.addEventListener('click', showGameHub);
+
+    const launchGameStage = (stageId, title) => {
+      if (hubView) hubView.classList.add('hidden');
+      if (viewportView) viewportView.classList.remove('hidden');
+      if (activeGameTitle) activeGameTitle.textContent = title;
+
+      document.querySelectorAll('.game-stage').forEach(el => el.classList.add('hidden'));
+      const activeStage = document.getElementById(`stage-${stageId}`);
+      if (activeStage) activeStage.classList.remove('hidden');
+    };
+
     if (dockPlay) {
       dockPlay.addEventListener('click', (e) => {
         if (window.petController) {
           window.petController.setExpression('excited');
-          window.petController.sayQuote('¡A JUGAR! 🎮 ¡Vamos a divertirnos atrapando pudines!');
+          window.petController.sayQuote('¡A JUGAR! 🎮 Elige tu minijuego favorito');
           if (e && e.clientX) window.petController.spawnFloatingParticle(e.clientX, e.clientY);
         }
+        showGameHub();
         this.openModal('modal-minigame');
       });
     }
 
-    // 5. DOCK - AJUSTES (DERECHA 2)
-    const dockSettings = document.getElementById('dock-btn-settings');
-    if (dockSettings) {
-      dockSettings.addEventListener('click', () => {
-        const cfg = window.storageManager.getSupabaseConfig();
-        const ownerInput = document.getElementById('cfg-owner-name');
-        const urlInput = document.getElementById('cfg-supabase-url');
-        const keyInput = document.getElementById('cfg-supabase-key');
-        if (ownerInput) ownerInput.value = this.state.ownerName || '';
-        if (urlInput) urlInput.value = cfg.url || '';
-        if (keyInput) keyInput.value = cfg.key || '';
-        this.openModal('modal-settings');
+    // --- JUEGO 1: PONCHO RUNNER (SALTA CHARCOS Y ATRAPA PUDINES) ---
+    const btnLaunchRunner = document.getElementById('btn-launch-runner');
+    const btnStartRunner = document.getElementById('btn-start-runner');
+    if (btnLaunchRunner) btnLaunchRunner.addEventListener('click', () => launchGameStage('runner', 'Poncho Runner 🏃'));
+    if (btnStartRunner) btnStartRunner.addEventListener('click', () => this.startPonchoRunnerGame());
+
+    // --- JUEGO 2: MEMORIA DE PUDINES (4x3 / 6 PARES) ---
+    const btnLaunchMemory = document.getElementById('btn-launch-memory');
+    const btnStartMemory = document.getElementById('btn-start-memory');
+    if (btnLaunchMemory) btnLaunchMemory.addEventListener('click', () => launchGameStage('memory', 'Memoria de Pudines 🧠'));
+    if (btnStartMemory) btnStartMemory.addEventListener('click', () => this.startMemoryGame());
+
+    // --- JUEGO 3: POP-POP PUDÍN (BURBUJAS 20s) ---
+    const btnLaunchBubbles = document.getElementById('btn-launch-bubbles');
+    const btnStartBubblesGame = document.getElementById('btn-start-bubbles-game');
+    if (btnLaunchBubbles) btnLaunchBubbles.addEventListener('click', () => launchGameStage('bubbles', 'Pop-Pop Pudín 🎈'));
+    if (btnStartBubblesGame) btnStartBubblesGame.addEventListener('click', () => this.startPopBubblesGame());
+
+    // --- BOTÓN DE AJUSTES ⚙️ EN EL HEADER SUPERIOR ---
+    const btnTopSettings = document.getElementById('btn-top-settings');
+    const openSettingsModal = () => {
+      const cfg = window.storageManager.getSupabaseConfig();
+      const ownerInput = document.getElementById('cfg-owner-name');
+      const urlInput = document.getElementById('cfg-supabase-url');
+      const keyInput = document.getElementById('cfg-supabase-key');
+      if (ownerInput) ownerInput.value = this.state.ownerName || '';
+      if (urlInput) urlInput.value = cfg.url || '';
+      if (keyInput) keyInput.value = cfg.key || '';
+      this.openModal('modal-settings');
+    };
+
+    if (btnTopSettings) btnTopSettings.addEventListener('click', openSettingsModal);
+
+    // Sintetizador de música de baile alegre (Fallback si no existen los MP3)
+    const playFallbackDanceMusic = () => {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return null;
+        const ctx = new AudioCtx();
+        const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
+        let step = 0;
+        const interval = setInterval(() => {
+          if (step > 30) { clearInterval(interval); return; }
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = notes[step % notes.length];
+          gain.gain.setValueAtTime(0.12, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.4);
+          step++;
+        }, 450);
+        return { stop: () => { clearInterval(interval); ctx.close(); } };
+      } catch (err) { return null; }
+    };
+
+    // 5. DOCK - BAILAR 💃 (10 GIFs ALEATORIOS Y MÚSICA DE 15 SEGUNDOS)
+    const dockDance = document.getElementById('dock-btn-dance');
+    if (dockDance) {
+      dockDance.addEventListener('click', (e) => {
+        // Pausar música suave de fondo mientras bailamos
+        this.pauseBackgroundMusic();
+
+        // Elegir aleatoriamente 1 de los 10 GIFs de baile
+        const randomDanceIndex = Math.floor(Math.random() * 10) + 1;
+        const danceGifUrl = `assets/dance/dance${randomDanceIndex}.gif`;
+
+        // Elegir aleatoriamente 1 de las 5 canciones de baile
+        const randomSongIndex = Math.floor(Math.random() * 5) + 1;
+        const songUrl = `assets/music/song${randomSongIndex}.mp3`;
+
+        // Reproducir audio con fallback sintetizado
+        if (this.currentDanceAudio) {
+          try { this.currentDanceAudio.pause(); } catch(e){}
+        }
+        if (this.currentSynthDance) {
+          try { this.currentSynthDance.stop(); } catch(e){}
+        }
+
+        const audio = new Audio(songUrl);
+        this.currentDanceAudio = audio;
+        audio.play().catch(() => {
+          this.currentSynthDance = playFallbackDanceMusic();
+        });
+
+        if (dashPurinGif) {
+          dashPurinGif.src = danceGifUrl;
+          dashPurinGif.onerror = () => { dashPurinGif.src = 'assets/purin_saludando.gif'; };
+          dashPurinGif.classList.add('eating-active');
+        }
+
+        if (window.petController) {
+          window.petController.setExpression('excited');
+          window.petController.sayQuote(`¡A BAILAR! 💃🎶 ¡Disfrutando el ritmo por 15 segundos!`);
+          if (e && e.clientX) {
+            window.petController.spawnFloatingParticle(e.clientX, e.clientY);
+          }
+        }
+
+        if (window.confetti) {
+          window.confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
+        }
+
+        // Aumentar Ánimo un +15% por bailar
+        this.state.stats.mimos = Math.min(100, (this.state.stats.mimos || 25) + 15);
+        window.storageManager.saveState(this.state);
+        if (window.tasksController) window.tasksController.updateStatsUI(this.state.stats);
+
+        // Terminar la fiesta de baile exactamente a los 15 segundos
+        if (this.danceTimer) clearTimeout(this.danceTimer);
+        this.danceTimer = setTimeout(() => {
+          if (this.currentDanceAudio) {
+            try { this.currentDanceAudio.pause(); } catch(e){}
+          }
+          if (this.currentSynthDance) {
+            try { this.currentSynthDance.stop(); } catch(e){}
+          }
+          if (dashPurinGif) {
+            dashPurinGif.src = 'assets/purin_saludando.gif';
+            dashPurinGif.classList.remove('eating-active');
+          }
+          if (window.petController) {
+            window.petController.setExpression('happy');
+            window.petController.sayQuote('¡Qué baile tan genial por 15 segundos! 💕');
+          }
+
+          // Reanudar música suave de fondo al finalizar el baile
+          this.resumeBackgroundMusic();
+        }, 15000);
       });
     }
 
@@ -550,11 +794,405 @@ class App {
   openModal(modalId) {
     const el = document.getElementById(modalId);
     if (el) el.classList.remove('hidden');
+    if (modalId === 'modal-minigame') {
+      this.pauseBackgroundMusic();
+    }
   }
 
   closeModal(modalId) {
     const el = document.getElementById(modalId);
     if (el) el.classList.add('hidden');
+    if (modalId === 'modal-minigame') {
+      this.resumeBackgroundMusic();
+    }
+  }
+
+  // --- GESTOR DE MÚSICA DE FONDO (AUTO-INICIO, PAUSA EN SUEÑO/BAILE/JUEGO) ---
+  initBackgroundMusic() {
+    this.bgAudio = new Audio('assets/music/bg_music.mp3');
+    this.bgAudio.loop = true;
+    this.bgAudio.volume = 0.3;
+    this.isBgMusicPlaying = false;
+    this.isBgMusicMuted = false;
+
+    const btnTopMusic = document.getElementById('btn-top-music');
+    const musicIcon = document.getElementById('music-top-icon');
+
+    const updateIcon = () => {
+      if (musicIcon) {
+        musicIcon.textContent = this.isBgMusicPlaying && !this.isBgMusicMuted ? '🎵' : '🔇';
+      }
+    };
+
+    if (btnTopMusic) {
+      btnTopMusic.addEventListener('click', () => {
+        if (this.isBgMusicPlaying) {
+          this.pauseBackgroundMusic(true);
+        } else {
+          this.resumeBackgroundMusic(true);
+        }
+        updateIcon();
+      });
+    }
+
+    // Intentar reproducción inmediata al cargar la app
+    this.resumeBackgroundMusic();
+    updateIcon();
+
+    // Desbloquear instantáneamente al primer toque/clic por política de navegadores
+    const unlockAudioOnGesture = () => {
+      if (!this.isBgMusicPlaying && !this.isBgMusicMuted) {
+        this.resumeBackgroundMusic();
+        updateIcon();
+      }
+      ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+        document.removeEventListener(evt, unlockAudioOnGesture);
+      });
+    };
+
+    ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+      document.addEventListener(evt, unlockAudioOnGesture, { once: true });
+    });
+  }
+
+  pauseBackgroundMusic(userInitiated = false) {
+    if (userInitiated) this.isBgMusicMuted = true;
+    if (this.bgAudio) {
+      try { this.bgAudio.pause(); } catch(e){}
+    }
+    this.isBgMusicPlaying = false;
+  }
+
+  resumeBackgroundMusic(userInitiated = false) {
+    if (userInitiated) this.isBgMusicMuted = false;
+    if (this.isBgMusicMuted) return;
+
+    if (this.bgAudio) {
+      this.bgAudio.play().then(() => {
+        this.isBgMusicPlaying = true;
+      }).catch((err) => {
+        // Buscar sí o sí la canción assets/music/bg_music.mp3 sin melodías sintéticas
+        console.log('Buscando archivo de música: assets/music/bg_music.mp3');
+        this.isBgMusicPlaying = false;
+      });
+    }
+  }
+  stopActiveMinigames() {
+    if (this.runnerInterval) clearInterval(this.runnerInterval);
+    if (this.runnerFrame) cancelAnimationFrame(this.runnerFrame);
+    if (this.bubbleSpawnInterval) clearInterval(this.bubbleSpawnInterval);
+    if (this.bubbleTimerInterval) clearInterval(this.bubbleTimerInterval);
+    if (this.runnerKeyHandler) {
+      document.removeEventListener('keydown', this.runnerKeyHandler);
+    }
+  }
+
+  // 🏃 1. PONCHO RUNNER (SALTA CHARCOS Y ATRAPA PUDINES)
+  startPonchoRunnerGame() {
+    this.stopActiveMinigames();
+
+    const ponchoEl = document.getElementById('runner-poncho');
+    const arenaEl = document.getElementById('runner-arena');
+    const scoreVal = document.getElementById('runner-score-val');
+    const btnStart = document.getElementById('btn-start-runner');
+
+    if (!ponchoEl || !arenaEl) return;
+    if (btnStart) btnStart.textContent = '¡Saltar! 🚀';
+
+    let score = 0;
+    let ponchoY = 0;
+    let velocityY = 0;
+    const gravity = 0.7;
+    let isJumping = false;
+    let isGameOver = false;
+    let obstacles = [];
+    let puddings = [];
+
+    ponchoEl.textContent = '🐶';
+    ponchoEl.style.bottom = '24px';
+    if (scoreVal) scoreVal.textContent = '0';
+
+    // Limpiar obstáculos anteriores
+    arenaEl.querySelectorAll('.runner-obstacle, .runner-pudding').forEach(e => e.remove());
+
+    const jump = () => {
+      if (isGameOver) return;
+      if (!isJumping) {
+        velocityY = 13;
+        isJumping = true;
+      }
+    };
+
+    this.runnerKeyHandler = (e) => {
+      if (e.code === 'Space' || e.code === 'ArrowUp') {
+        e.preventDefault();
+        jump();
+      }
+    };
+
+    document.addEventListener('keydown', this.runnerKeyHandler);
+    arenaEl.onclick = jump;
+    arenaEl.ontouchstart = (e) => { e.preventDefault(); jump(); };
+
+    let spawnTimer = 0;
+    let frameCount = 0;
+
+    const gameLoop = () => {
+      if (isGameOver) return;
+
+      // Física de salto
+      ponchoY += velocityY;
+      velocityY -= gravity;
+
+      if (ponchoY <= 0) {
+        ponchoY = 0;
+        velocityY = 0;
+        isJumping = false;
+      }
+      ponchoEl.style.bottom = `${24 + ponchoY}px`;
+
+      // Generar obstáculos y pudines cada N frames
+      frameCount++;
+      if (frameCount > 80) {
+        frameCount = 0;
+        if (Math.random() > 0.35) {
+          // Obstáculo (Charco / Nube de Lluvia)
+          const obs = document.createElement('div');
+          obs.className = 'runner-obstacle';
+          obs.textContent = Math.random() > 0.5 ? '🌧️' : '🌊';
+          obs.style.right = '-30px';
+          arenaEl.appendChild(obs);
+          obstacles.push({ el: obs, x: arenaEl.clientWidth });
+        } else {
+          // Pudín flotante
+          const pud = document.createElement('div');
+          pud.className = 'runner-pudding';
+          pud.textContent = '🍮';
+          pud.style.right = '-30px';
+          arenaEl.appendChild(pud);
+          puddings.push({ el: pud, x: arenaEl.clientWidth });
+        }
+      }
+
+      // Mover obstáculos
+      for (let i = obstacles.length - 1; i >= 0; i--) {
+        const obs = obstacles[i];
+        obs.x -= 4.5;
+        obs.el.style.right = `${arenaEl.clientWidth - obs.x}px`;
+
+        // Colisión con Poncho
+        if (obs.x > 20 && obs.x < 65 && ponchoY < 30) {
+          isGameOver = true;
+          ponchoEl.textContent = '🥺';
+          if (window.petController) window.petController.setExpression('petting');
+          alert(`¡Oh no! Poncho tropezó con un charquito 🌧️\nPuntaje Final: ${score} pts`);
+          if (btnStart) btnStart.textContent = '¡Intentar de nuevo! 🔄';
+          return;
+        }
+
+        if (obs.x < -30) {
+          obs.el.remove();
+          obstacles.splice(i, 1);
+        }
+      }
+
+      // Mover pudines
+      for (let i = puddings.length - 1; i >= 0; i--) {
+        const pud = puddings[i];
+        pud.x -= 4.5;
+        pud.el.style.right = `${arenaEl.clientWidth - pud.x}px`;
+
+        // Atrapar pudín
+        if (pud.x > 20 && pud.x < 65 && ponchoY > 35) {
+          score += 10;
+          if (scoreVal) scoreVal.textContent = score;
+          if (window.confetti) window.confetti({ particleCount: 20, spread: 40 });
+          pud.el.remove();
+          puddings.splice(i, 1);
+
+          // Completar tarea
+          if (window.tasksController) window.tasksController.completeSpecificTask('day2', 'minigameDone');
+        } else if (pud.x < -30) {
+          pud.el.remove();
+          puddings.splice(i, 1);
+        }
+      }
+
+      this.runnerFrame = requestAnimationFrame(gameLoop);
+    };
+
+    this.runnerFrame = requestAnimationFrame(gameLoop);
+  }
+
+  // 🧠 2. MEMORIA DE PUDINES (4x3 GRID / 6 PARES)
+  startMemoryGame() {
+    this.stopActiveMinigames();
+
+    const gridEl = document.getElementById('memory-grid');
+    const pairsVal = document.getElementById('memory-pairs-val');
+    const btnStart = document.getElementById('btn-start-memory');
+    if (!gridEl) return;
+
+    if (btnStart) btnStart.textContent = '¡Mezclar e Iniciar! 🧠';
+    gridEl.innerHTML = '';
+    if (pairsVal) pairsVal.textContent = '0';
+
+    const icons = ['🍮', '🌸', '🎀', '🍰', '⭐', '💖'];
+    const deck = [...icons, ...icons].sort(() => Math.random() - 0.5);
+
+    let firstCard = null;
+    let secondCard = null;
+    let lockBoard = false;
+    let matchedPairs = 0;
+
+    deck.forEach(icon => {
+      const card = document.createElement('div');
+      card.className = 'memory-card';
+      card.dataset.icon = icon;
+      card.textContent = '❓';
+
+      card.addEventListener('click', () => {
+        if (lockBoard || card === firstCard || card.classList.contains('matched')) return;
+
+        card.classList.add('flipped');
+        card.textContent = icon;
+
+        if (!firstCard) {
+          firstCard = card;
+          return;
+        }
+
+        secondCard = card;
+        lockBoard = true;
+
+        if (firstCard.dataset.icon === secondCard.dataset.icon) {
+          firstCard.classList.add('matched');
+          secondCard.classList.add('matched');
+          matchedPairs++;
+          if (pairsVal) pairsVal.textContent = matchedPairs;
+
+          firstCard = null;
+          secondCard = null;
+          lockBoard = false;
+
+          if (matchedPairs === 6) {
+            if (window.confetti) window.confetti({ particleCount: 80, spread: 70 });
+            if (window.petController) window.petController.sayQuote('¡Increíble memoria! ¡Encontraste todos los pares! 🎉');
+            if (window.tasksController) window.tasksController.completeSpecificTask('day2', 'minigameDone');
+            if (btnStart) btnStart.textContent = '¡Jugar de Nuevo! 🌟';
+          }
+        } else {
+          setTimeout(() => {
+            firstCard.classList.remove('flipped');
+            secondCard.classList.remove('flipped');
+            firstCard.textContent = '❓';
+            secondCard.textContent = '❓';
+            firstCard = null;
+            secondCard = null;
+            lockBoard = false;
+          }, 800);
+        }
+      });
+
+      gridEl.appendChild(card);
+    });
+  }
+
+  // 🎈 3. POP-POP PUDÍN (BURBUJAS 20 SEGUNDOS)
+  startPopBubblesGame() {
+    this.stopActiveMinigames();
+
+    const arenaEl = document.getElementById('bubbles-arena');
+    const scoreVal = document.getElementById('bubbles-score-val');
+    const timerVal = document.getElementById('bubbles-timer-val');
+    const btnStart = document.getElementById('btn-start-bubbles-game');
+
+    if (!arenaEl) return;
+    arenaEl.innerHTML = '';
+    let score = 0;
+    let timeLeft = 20;
+
+    if (scoreVal) scoreVal.textContent = '0';
+    if (timerVal) timerVal.textContent = '20';
+    if (btnStart) btnStart.textContent = '¡En Progreso...! 🎈';
+
+    // Generador de burbujas flotantes
+    this.bubbleSpawnInterval = setInterval(() => {
+      const bubble = document.createElement('div');
+      const rand = Math.random();
+
+      let typeClass = 'bubble-normal';
+      let content = '🌸';
+      let pts = 1;
+
+      if (rand > 0.7) {
+        typeClass = 'bubble-pudding';
+        content = '🍮';
+        pts = 5;
+      } else if (rand > 0.5) {
+        typeClass = 'bubble-star';
+        content = '⭐';
+        pts = 2;
+      }
+
+      bubble.className = `popping-bubble ${typeClass}`;
+      bubble.textContent = content;
+
+      const size = Math.floor(Math.random() * 20) + 40;
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      bubble.style.left = `${Math.random() * (arenaEl.clientWidth - size)}px`;
+      bubble.style.bottom = '-50px';
+
+      let bottomPos = -50;
+      const speed = Math.random() * 1.5 + 1.2;
+
+      const floatLoop = setInterval(() => {
+        bottomPos += speed;
+        bubble.style.bottom = `${bottomPos}px`;
+        if (bottomPos > arenaEl.clientHeight + 50) {
+          clearInterval(floatLoop);
+          bubble.remove();
+        }
+      }, 20);
+
+      bubble.addEventListener('click', (e) => {
+        e.stopPropagation();
+        clearInterval(floatLoop);
+        score += pts;
+        if (typeClass === 'bubble-star') timeLeft += 2;
+        if (scoreVal) scoreVal.textContent = score;
+
+        bubble.style.transform = 'scale(1.4)';
+        bubble.style.opacity = '0';
+        setTimeout(() => bubble.remove(), 100);
+      });
+
+      arenaEl.appendChild(bubble);
+    }, 450);
+
+    // Temporizador descendente
+    this.bubbleTimerInterval = setInterval(() => {
+      timeLeft--;
+      if (timerVal) timerVal.textContent = Math.max(0, timeLeft);
+
+      if (timeLeft <= 0) {
+        this.stopActiveMinigames();
+        arenaEl.innerHTML = '';
+
+        // Recargar +15% de energía a Poncho
+        this.state.stats.energia = Math.min(100, (this.state.stats.energia || 20) + 15);
+        window.storageManager.saveState(this.state);
+        if (window.tasksController) {
+          window.tasksController.updateStatsUI(this.state.stats);
+          window.tasksController.completeSpecificTask('day2', 'minigameDone');
+        }
+
+        if (window.confetti) window.confetti({ particleCount: 70, spread: 60 });
+        alert(`¡Tiempo Agotado! 🎈\nExplotaste burbujas para sumar ${score} pts.\n¡Energía de Poncho aumentada un +15%! ⚡`);
+        if (btnStart) btnStart.textContent = '¡Explotar de Nuevo! 🎈';
+      }
+    }, 1000);
   }
 }
 
